@@ -12,10 +12,18 @@
         "experimentalDecorators": true,
         "moduleResolution": "node",
         "noUnusedLocals": false, 
-	"outDir": "./dist/"
+	"outDir": "./dist/",
+	"jsx": "react",
+	"jsxFactory": "h"
+
     },
     "compileOnSave": false,
     "exclude": [
       "node_modules"
+    ],
+    "include": [
+	    "./app/**/*.tsx",
+	    "./app/**/*.ts"
     ]
+
 }
