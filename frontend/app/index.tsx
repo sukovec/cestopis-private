@@ -1,3 +1,4 @@
 import { h, render } from "preact";
+import { App } from "./App";
 
-render(<h1>cool</h1>, document.getElementById("app"));
+render(<App />, document.getElementById("app"));

@@ -9,11 +9,25 @@ module.exports = {
 	module: {
 		rules: [
 			{
+				test: /\.css$/,
+				include: path.join(__dirname, 'src/components'),
+				use: [
+					'style-loader',
+					{
+						loader: 'typings-for-css-modules-loader',
+						options: {
+							modules: true,
+							namedExport: true
+						}
+					}
+				]
+			},
+			{
 				test: /\.tsx?$/,
 				use: 'ts-loader',
 				exclude: /node_modules/
 			}
-		]
+		],
 	},
 	resolve: {
 		extensions: [ '.tsx', '.ts', '.js' ]
@@ -26,4 +40,5 @@ module.exports = {
 		new CopyPlugin( [ { "from": "static", "to": "." } ])
 	]
 };
+
 

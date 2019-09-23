@@ -7,8 +7,12 @@ import * as path  from "path";
 import { Container } from "inversify";
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 
+// support
+
+//import "./sup/db"
+
 // controllers:
-import "./test";
+import "./controllers/routes";
 
 // set up container
 let container = new Container();
