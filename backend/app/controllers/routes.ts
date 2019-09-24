@@ -1,19 +1,18 @@
-import { controller, httpGet } from 'inversify-express-utils';
-import * as nedb from "nedb";
+import { controller, httpGet, requestBody, httpPost } from 'inversify-express-utils';
+import { inject } from "inversify"
+import TYPES from "../const/types";
+import db from "../sup/db";
 
 @controller('/api/routes')
 export class RouteController {
-	constructor() {
-		var doc = { "a": "b", 
-			"c": "d"};
-		let db = new nedb({filename: "/tmp/thefile.db", autoload: true});
-		db.insert(doc, function(err, newdoc) {
-			console.log(newdoc);
-		});
+	constructor(@inject(TYPES.database) private database: db) {
+
 	}
 
-	@httpGet('/')
-	public get(): string {
-		return 'Home sweet home';
+	@httpPost("/routeBetween") 
+	public getRoute(@requestBody() body: any): Promise<any> {
+		return new Promise( (res, rej) => {
+			res([body.from, body.to]);
+		});
 	}
 }

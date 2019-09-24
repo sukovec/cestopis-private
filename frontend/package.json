@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "@types/history": "^4.7.3",
+    "@types/leaflet": "^1.5.1",
     "history": "^4.10.1",
+    "leaflet": "^1.5.1",
     "preact": "^8.5.2",
     "preact-fluid": "^0.9.1",
     "preact-material-components": "^1.6.0",
