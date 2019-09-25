@@ -2,11 +2,15 @@ import { h, render } from "preact";
 import { Component } from "preact";
 import { LeafletMouseEvent } from "leaflet";
 
+
 import Switch from 'preact-material-components/Switch';
 import Button from 'preact-material-components/Button';
+import Radio from 'preact-material-components/Radio';
 
 import { IDefProps } from "../iface";
 import Map from "./Map";
+
+import * as API from "../common/ifaces";
 
 interface IREEProps extends IDefProps {
     createNew: boolean;
@@ -14,7 +18,7 @@ interface IREEProps extends IDefProps {
 }
 
 interface IREEStat {
-    routePoints: any[];
+    routePoints: API.RoutePoint[];
 }
 
 export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
@@ -35,10 +39,16 @@ export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
     /* EVENT HANDLERS */
     ////////////////////
     mapClick(evt: LeafletMouseEvent) {
-        if (this.route && this.state.routePoints.length >= 2) {
+        let newPoint: API.RoutePoint = {
+            mode: this.route ? API.RoutePointMode.Routed : API.RoutePointMode.ByHand,
+            latlng: evt.latlng,
+            extRouted: []
+        };
+
+        if (newPoint.mode == API.RoutePointMode.Routed) {
             let body = { 
                 from:  this.state.routePoints[this.state.routePoints.length - 1],
-                to: evt.latlng
+                to: newPoint
             };
 
             fetch("/api/routes/routeBetween", {
@@ -47,24 +57,21 @@ export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
                 headers: { "content-type": "application/json" }, 
                 body: JSON.stringify(body)}).then( (res) => {
                     return res.json();
-                }).then( (res) => {
-                    this.setState( (oldstate) => {
-                        let ret = {
-                            routePoints: oldstate.routePoints.concat(res)
+                }).then( (res: API.APIResponse<API.APIResponseRoute>) => {
+                    newPoint.extRouted = res.data;
+                    this.setState((oldstate) => {
+                        return {
+                            routePoints: [...oldstate.routePoints, newPoint]
                         }
-
-                        console.log("New data, looking like this:", ret);
-                        return ret;
                     });
-
                 }).catch( (err) => {
-                    console.log("Error fetching lo");
+                    console.log("Error fetching route", err);
                 });
-            
+
         } else {
-            this.setState( (oldstate) => {
+            this.setState((oldstate) => {
                 return {
-                    routePoints: [...oldstate.routePoints, evt.latlng]
+                    routePoints: [...oldstate.routePoints, newPoint]
                 }
             });
         }
@@ -86,6 +93,8 @@ export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
                         Options <br />
                         Route: <Switch onChange={this.routeSwitchChanged} /> <br />
                         <Button>Load GPX</Button>
+
+                        <hr />
                     </div>
                     <Map onclick={this.mapClick} points={this.state.routePoints} />
                 </div>

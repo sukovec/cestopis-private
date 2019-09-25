@@ -1,6 +1,8 @@
 import { h, render } from "preact";
+import { route } from "preact-router";
 
 import Button from 'preact-material-components/Button';
+import List from "preact-material-components/List";
 
 import { IDefProps } from "../iface";
 
@@ -12,8 +14,7 @@ export interface RouteEditorProps extends IDefProps {
 }
 
 export default function RouteEditor(props: RouteEditorProps) {
-	return <RouteEditorEdit createNew={true} />;
-
+	let ret;
 	if (props.action === "" || props.action === "list") {
 		return <RouteEditorList />
 	} else if (props.action === "create") {
@@ -26,5 +27,7 @@ export default function RouteEditor(props: RouteEditorProps) {
 }
 
 function RouteEditorList(props: RouteEditorProps) {
-	return <h1>List of routes</h1>
+	return <List>
+			<List.Item><Button onclick={() => {route("routes/create")}}>Create new</Button></List.Item>
+		</List>;
 }

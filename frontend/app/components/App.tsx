@@ -3,8 +3,9 @@ import { Router, route } from "preact-router";
 import { createHashHistory } from "history";
 
 import Button from 'preact-material-components/Button';
-//import 'preact-material-components/Button/style.css';
-//import 'preact-material-components/Theme/style.css';
+import TopAppBar from 'preact-material-components/TopAppBar';
+import 'preact-material-components/style.css';
+
 
 import RouteEditor from "./RouteEditor";
 
@@ -18,10 +19,9 @@ function route_routes() {
 
 export function App(props: any) {
 	return <div id="app">
-		<div id="menu">
-			<Button ripple raised onclick={route_articles}>Articles</Button>
-			<Button ripple raised onclick={route_routes}>Routes</Button>
-		</div>
+		<Button  onclick={route_articles}>Articles</Button>
+		<Button  onclick={route_routes}>Routes</Button>
+		<hr />	
 		<Router history={createHashHistory()}>
 			<h1 path="/articles">Artikly</h1>
 			<RouteEditor path="/routes/:action?/:id?" />

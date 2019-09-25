@@ -6,7 +6,7 @@ let provideSingleton = function(identifier: any) { return fluentProvide(identifi
 
 @provideSingleton(TYPES.database)
 export default class Database { 
-	routes: Dataset;
+	public readonly routes: Dataset;
 
 	constructor() {
 		this.routes = new Dataset("/home/suk/code/cestopis/data/routes.ndb");

@@ -5,11 +5,13 @@ import { IDefProps } from "../iface";
 import * as L from "leaflet"
 import layers from "../const/maplayers";
 
+import { RoutePoint, RoutePointMode, LatLng } from "../common/ifaces";
+
 interface MapProps extends IDefProps {
     //view: [ number, number];
     //viewZoom: number;
     onclick?: (evt: L.LeafletMouseEvent) => void;
-    points: L.LatLng[];
+    points: RoutePoint[];
 }
 
 interface MapStat {
@@ -24,6 +26,16 @@ export default class Map extends Component<MapProps, MapStat> {
         super();
         this.drawn = [];
         this.mouseClick = this.mouseClick.bind(this);
+    }
+
+    // HELPER
+    drawRoutePoints() {
+        let arr: LatLng[] = this.props.points.reduce( (acc, cur) => {
+            if (cur.mode == RoutePointMode.ByHand) { acc.push(cur.latlng); return acc ; } 
+            else return acc.concat(cur.extRouted);
+        }, []);       
+        this.drawn.push(L.polyline(arr, {color: "#ff00ff"}).addTo(this.map));
+
     }
 
     componentDidMount() {
@@ -48,17 +60,17 @@ export default class Map extends Component<MapProps, MapStat> {
     }
 
     componentDidUpdate(prevProps: MapProps, prevState: MapStat) {
-        console.log("Component updated");
         for (let i = 0; i < this.drawn.length; i++) {
             if (!this.drawn.hasOwnProperty(i)) continue;
 
             this.drawn[i].remove();
         }
 
-        this.drawn.push(L.polyline(this.props.points, {color: "#ff00ff"}).addTo(this.map));
+        this.drawRoutePoints();
     }
 
+    // RENDER
     render() {
-        return <div style="width: 512px; height: 512px"></div>;
+        return <div style="width: 700px; height: 512px"></div>;
     }
 }

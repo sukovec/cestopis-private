@@ -9,28 +9,18 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.css$/,
-				include: path.join(__dirname, 'src/components'),
-				use: [
-					'style-loader',
-					{
-						loader: 'typings-for-css-modules-loader',
-						options: {
-							modules: true,
-							namedExport: true
-						}
-					}
-				]
-			},
-			{
 				test: /\.tsx?$/,
 				use: 'ts-loader',
 				exclude: /node_modules/
+			},
+			{
+				test: /\.css$/i,
+				use: ['style-loader', 'css-loader' ]
 			}
 		],
 	},
 	resolve: {
-		extensions: [ '.tsx', '.ts', '.js' ]
+		extensions: [ '.tsx', '.ts', '.js', '.css' ]
 	},
 	output: {
 		filename: 'bundle.js',
