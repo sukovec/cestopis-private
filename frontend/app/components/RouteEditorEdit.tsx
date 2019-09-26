@@ -9,6 +9,7 @@ import Radio from 'preact-material-components/Radio';
 
 import { IDefProps } from "../iface";
 import Map from "./Map";
+import RoutePointList from "./RoutePointList";
 
 import * as API from "../common/ifaces";
 
@@ -32,9 +33,11 @@ export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
 
         this.mapClick = this.mapClick.bind(this);
         this.routeSwitchChanged = this.routeSwitchChanged.bind(this);
+        this.removePointClicked = this.removePointClicked.bind(this);
         
         this.route = false;
     }
+
     ////////////////////
     /* EVENT HANDLERS */
     ////////////////////
@@ -82,6 +85,14 @@ export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
         this.route = evt.srcElement.checked;
     }
 
+    removePointClicked(idx: any) {
+        this.setState((oldstate) => {
+            return {
+                routePoints: [...oldstate.routePoints.slice(0, idx), ...oldstate.routePoints.slice(idx + 1)]
+            }
+        });
+    }
+
     //////////////////////////////
     /*          RENDER          */
     //////////////////////////////
@@ -96,7 +107,9 @@ export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
 
                         <hr />
                     </div>
-                    <Map onclick={this.mapClick} points={this.state.routePoints} />
+                    <table><tr><td style="vertical-align: top">
+                    <Map onclick={this.mapClick} points={this.state.routePoints} /></td><td style="vertical-align: top">
+                    <RoutePointList points={this.state.routePoints} /></td></tr></table>
                 </div>
         else 
             return <h1>Edit a route</h1>

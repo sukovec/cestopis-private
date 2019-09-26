@@ -71,6 +71,6 @@ export default class Map extends Component<MapProps, MapStat> {
 
     // RENDER
     render() {
-        return <div style="width: 700px; height: 512px"></div>;
+        return <div style="width: 600px; height: 512px"></div>;
     }
 }
