@@ -16,21 +16,23 @@ export interface RoutePointListStat {
 }
 
 export default class RoutePointList extends Component<RoutePointListProps, RoutePointListStat> {
-    renderPoint(rp: API.RoutePoint, idx: number) {
+    renderPoint(rp: API.RoutePoint, idx: number, arr: API.RoutePoint[]) {
+        let rmPointButton = arr.length -1 == idx ? <Button onClick={() => {this.props.onRemoveClick && this.props.onRemoveClick(idx); }}>Rm</Button> : null;
+        
         return <List.Item>
             <List.TextContainer>
                 <List.PrimaryText>{Math.round(rp.latlng.lat * 1000000)/1000000}, {Math.round(rp.latlng.lng*1000000)/1000000}</List.PrimaryText>
                 <List.SecondaryText>{rp.mode == API.RoutePointMode.ByHand ? "hand" : `routed, ${rp.extRouted.length} subpoints`}</List.SecondaryText>
             </List.TextContainer>
             <List.ItemMeta>
-                <Button onClick={() => {this.props.onRemoveClick && this.props.onRemoveClick(idx); }}>Rm</Button>
+                {rmPointButton}
                 <Button onClick={() => {this.props.onInsertClick && this.props.onInsertClick(idx); }}>Ins</Button>
             </List.ItemMeta>
         </List.Item>;
     }
     render() {
         return <List two-line={true}>
-            {this.props.points.map(this.renderPoint)}
+            {this.props.points.map(this.renderPoint.bind(this))}
             </List>
     }
 }

@@ -52,4 +52,20 @@ export class RouteController {
 			})
 		});
 	}
+
+	@httpPost("/route")
+	public createNewRoute(@requestBody() body: any): Promise<API.APIResponse<API.APIResponseID>> {
+		return new Promise( (res, rej) => {
+			this.database.routes.insert(body, (err, doc) => {
+				if (err) return rej(err);
+
+				let resp: API.APIResponse<API.APIResponseID> = {
+					result: API.APIResponseResult.OK,
+					data: doc._id
+				};
+
+				res(resp);
+			});
+		});
+	}
 }
