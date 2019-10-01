@@ -71,7 +71,7 @@ export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
                 body: JSON.stringify(body)
             }).then((res) => {
                 return res.json();
-            }).then((res: API.APIResponse<API.APIResponseRoute>) => {
+            }).then((res: API.APIResponse<API.RespRoute>) => {
                 newPoint.extRouted = res.data;
                 this.setState((oldstate) => {
                     return {
@@ -99,7 +99,7 @@ export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
             body: JSON.stringify(this.state)
         }).then( (res) => { 
             return res.json();
-        }).then( (res: API.APIResponse<API.APIResponseID>) => {
+        }).then( (res: API.APIResponse<API.RespID>) => {
             route(`/routes/edit/${res.data}`);
         });
     }

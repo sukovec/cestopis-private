@@ -6,13 +6,22 @@ import List from "preact-material-components/List";
 
 import { IDefProps } from "../iface";
 
+import DirList from "./PhotoTaggerDirlist";
+
 export interface PhotoTaggerProps extends IDefProps {
 	directory?: string;
 	photo?: string;	
 }
 
 export default function PhotoTagger(props: PhotoTaggerProps) {
-    return <h1>Photo tagger</h1>;
+    if (props.directory === "") {
+        return <DirList />
+    } else if (props.directory !== "" && props.photo === "") {
+        return <h1>Direktory set, foto nic</h1>
+    } else {
+        return <h1>Foto edit</h1>
+    }
+
 	/*let ret;
 	if (props.action === "" || props.action === "list") {
 		return <RouteEditorList />

@@ -81,11 +81,17 @@ export enum APIResponseResult {
     Fail = "fail"
 }
 
-export type APIResponseRoute = LatLng[];
-export type APIResponseID = string;
-export type APIPossibleResponse = void | APIResponseRoute | APIResponseID;
+export type RespRoute = LatLng[];
+export type RespID = string;
+export type RespPhotoDirlist = string[];
 
 
+export type APIPossibleResponse = 
+    void | 
+    RespRoute | 
+    RespID | 
+    RespPhotoDirlist;
+    
 export interface APIResponse<T extends APIPossibleResponse > {
     result: APIResponseResult;
     resultDetail?: string;

@@ -13,7 +13,7 @@ import "./sup/db"
 
 // controllers:
 import "./controllers/routes";
-
+import "./controllers/photos";
 
 // set up container
 let container = new Container();
@@ -34,7 +34,5 @@ container.load(buildProviderModule())
 let app = server.build();
 app.listen(9080);
 
-
-
-console.log("Running on http://localhost:9080/");
+console.log("Roonning on http://localhost:9080/");
 console.log("Static from: ", path.resolve("../frontend/dist"));

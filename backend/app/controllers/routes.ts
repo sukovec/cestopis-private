@@ -13,7 +13,7 @@ export class RouteController {
 	}
 
 	@httpPost("/routeBetween") 
-	public getRoute(@requestBody() body: API.APIRequestRoute): Promise<API.APIResponse<API.APIResponseRoute>> {
+	public getRoute(@requestBody() body: API.APIRequestRoute): Promise<API.APIResponse<API.RespRoute>> {
 		let crdS = `${body.from.latlng.lng},${body.from.latlng.lat}`;
 		let crdE = `${body.to.latlng.lng},${body.to.latlng.lat}`;
 
@@ -24,7 +24,7 @@ export class RouteController {
 
 			let coords: API.LatLng[] = res.routes[0].geometry.coordinates.map((itm: any) => {return {lat: itm[1], lng: itm[0]}});
 
-			let ret: API.APIResponse<API.APIResponseRoute> = {
+			let ret: API.APIResponse<API.RespRoute> = {
 				result: API.APIResponseResult.OK,
 				data: coords
 			};
@@ -54,12 +54,12 @@ export class RouteController {
 	}
 
 	@httpPost("/route")
-	public createNewRoute(@requestBody() body: any): Promise<API.APIResponse<API.APIResponseID>> {
+	public createNewRoute(@requestBody() body: any): Promise<API.APIResponse<API.RespID>> {
 		return new Promise( (res, rej) => {
 			this.database.routes.insert(body, (err, doc) => {
 				if (err) return rej(err);
 
-				let resp: API.APIResponse<API.APIResponseID> = {
+				let resp: API.APIResponse<API.RespID> = {
 					result: API.APIResponseResult.OK,
 					data: doc._id
 				};
