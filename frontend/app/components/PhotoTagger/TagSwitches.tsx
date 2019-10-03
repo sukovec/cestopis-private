@@ -13,7 +13,16 @@ interface TagswitchesProps extends IDefProps {
 }
 
 interface TagswitchesStat {
-    setTags: { [id: string]: API.PhotoSetTag},
+    setTags: { [id: string]: API.PhotoSetTag}, // do it here on in tthe parent?
+    // fuck, I don't know
+    // maybe I should reconsider PhotoSetTag[] to PhotoSetTags: { [_id]: { set-subtag-name, whatever }}
+    // oh yeah, I will do next time
+    // go to sleep and don't forget to do it next time
+    // so: change it from array to map-object
+    // don't forget to rewrite database-convertor (with inifile)
+    // but still try to think about it little bit (is it even good idea?)
+    // I think it is (unlike not-using classic database)
+    /// buena noche
     tagList: API.PhotoTag[];
     error: string
 }

@@ -26,7 +26,7 @@ export enum PhotoType {
 };
 
 export interface PhotoSetTag {
-    tag: string;
+    tag: string; // this may be little bit confusing, but let's go and use PhotoTag.tagName instead of _id
     subtag?: string;
 }
 
