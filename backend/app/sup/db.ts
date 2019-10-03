@@ -2,9 +2,9 @@ import * as Dataset from "nedb";
 import TYPES from "../const/types"
 import { fluentProvide } from "inversify-binding-decorators"
 
-let provideSingleton = function(identifier: any) { return fluentProvide(identifier).inSingletonScope().done(); };
+//let provideSingleton = function(identifier: any) { return fluentProvide(identifier).inSingletonScope().done(); };
 
-@provideSingleton(TYPES.database)
+//@provideSingleton(TYPES.database)
 export default class Database { 
 	public readonly routes: Dataset;
 	public readonly photos: Dataset;

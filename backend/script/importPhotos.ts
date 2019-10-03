@@ -10,17 +10,36 @@ let dbase = new db();
 
 let thumbdir = "/var/www/vps.sukovec.cz/thumbs";
 
-let dirs = fs.readdirSync(thumbdir);
+type tagbase = {[key: string]: API.PhotoTag};
 
-dirs.forEach( (dir) => {
-    //let directory = path.join(thumbdir, dir);
-    let tagfile = path.join(thumbdir, dir, ".tag-index");
-    if (fs.existsSync(tagfile)) {
-        readIniFile(tagfile, dir, dbase);
-    } else {
-        console.warn(`There is a directory ${dir} without .tag-index!`);
-    }
-});
+function loadTags(dbase: db): Promise<tagbase> {
+    return new Promise((res, rej) => {
+        dbase.phtags.find({}, (err: any, docs: API.PhotoTag[]) => {
+            if (err) return rej(err);
+
+            let ret: {[key:string]:API.PhotoTag} = {};
+            docs.forEach( (itm)=> {
+                ret[itm.tagName] = itm;
+            });
+
+            res(ret);
+        });
+    });
+}
+
+function processPhotos(thumbdir: string, dbase: db, tb: tagbase) {
+    let dirs = fs.readdirSync(thumbdir);
+
+    dirs.forEach( (dir) => {
+        //let directory = path.join(thumbdir, dir);
+        let tagfile = path.join(thumbdir, dir, ".tag-index");
+        if (fs.existsSync(tagfile)) {
+            readCsvFile(tagfile, dir, dbase, tb);
+        } else {
+            console.warn(`There is a directory ${dir} without .tag-index!`);
+        }
+    });
+}
 
 function decidePhotoSource(dir: string, file: string): API.PhotoSource {
     let rexp = [
@@ -79,19 +98,23 @@ function parseDate(dir: string, fname: string) {
     return new Date();
 }
 
-function parseTags(tags: string): API.PhotoSetTag[] {
-    return tags.split(",").map( (itm) => {
+function parseTags(tags: string, tb: tagbase): API.PhotoTagset {
+    let ret: API.PhotoTagset = {};
+    if (tags == "") return ret;
+    
+    tags.split(",").forEach( (itm) => {
         let spl = itm.split(":");
 
-        return {
-            tag: spl[0],
-            subtag: spl[1]
-        };
+        let usedTag = tb[spl[0]];
+        console.log(`Parsing: '${itm}', got '${spl[0]}' and ${spl[1]}`);
+        ret[usedTag._id] = { subtag: spl[1] };
     });
+
+    return ret;
 }
 
 // TODO: Need to do this with some ini-parser for real data
-function readIniFile(fname: string, dir: string, dbase: db) {
+function readCsvFile(fname: string, dir: string, dbase: db, tb: tagbase) {
     let file = fs.readFileSync(fname).toString();
 
     file.split("\n").filter(itm => itm != "").map( (val) => {
@@ -104,7 +127,7 @@ function readIniFile(fname: string, dir: string, dbase: db) {
         };
     }).forEach( (img) => {
         let doc: API.Photo = {
-            tags: parseTags(img.tags),
+            tags: parseTags(img.tags, tb),
             source: decidePhotoSource(dir, fname),
             date: parseDate(dir, fname),
             folder: dir,
@@ -121,3 +144,8 @@ function readIniFile(fname: string, dir: string, dbase: db) {
         });
     })
 }
+console.log("loadtags");
+loadTags(dbase).then( (res) => {
+    console.log("processPhotos");
+    processPhotos(thumbdir, dbase, res);
+});

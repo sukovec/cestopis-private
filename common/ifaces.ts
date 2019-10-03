@@ -25,14 +25,18 @@ export enum PhotoType {
     oth = "other"
 };
 
+
 export interface PhotoSetTag {
-    tag: string; // this may be little bit confusing, but let's go and use PhotoTag.tagName instead of _id
     subtag?: string;
 }
 
+export interface PhotoTagset {
+    [ id: string ]: PhotoSetTag // _id of Tag
+};
+
 export interface Photo {
     _id?: string;
-    tags: PhotoSetTag[];
+    tags: PhotoTagset;
     source: PhotoSource;
     date: Date;
     folder: string;
