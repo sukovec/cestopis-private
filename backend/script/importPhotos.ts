@@ -1,9 +1,12 @@
-import * as API from "../app/common/ifaces";
-import db from "../app/sup/db";
-
 import * as fs from "fs";
 import * as path from "path";
+import * as parse from "csv-parse/lib/sync";
+import * as exif from "exif";
+
 import "reflect-metadata";
+
+import * as API from "../app/common/ifaces";
+import db from "../app/sup/db";
 
 // for this it's necessarry to comment lines 5 and 7 (if not changed since this commit) in db.ts file
 let dbase = new db();
@@ -101,7 +104,7 @@ function parseDate(dir: string, fname: string) {
 function parseTags(tags: string, tb: tagbase): API.PhotoTagset {
     let ret: API.PhotoTagset = {};
     if (tags == "") return ret;
-    
+
     tags.split(",").forEach( (itm) => {
         let spl = itm.split(":");
 
@@ -115,26 +118,20 @@ function parseTags(tags: string, tb: tagbase): API.PhotoTagset {
 
 // TODO: Need to do this with some ini-parser for real data
 function readCsvFile(fname: string, dir: string, dbase: db, tb: tagbase) {
-    let file = fs.readFileSync(fname).toString();
+    
+    let file = fs.readFileSync(fname, { encoding: "utf8"}).toString();
+    let data = parse(file, {columns: false, skip_empty_lines: true, delimiter: ";"});
 
-    file.split("\n").filter(itm => itm != "").map( (val) => {
-        let spl = val.split(";");
-        return {
-            thumb: spl[0],
-            orig: spl[1],
-            cmt: spl[2],
-            tags: spl[3]
-        };
-    }).forEach( (img) => {
+    data.forEach( (spl: string[]) => {
         let doc: API.Photo = {
-            tags: parseTags(img.tags, tb),
+            tags: parseTags(spl[3], tb),
             source: decidePhotoSource(dir, fname),
             date: parseDate(dir, fname),
             folder: dir,
-            original: img.orig,
-            thumb: img.thumb,
-            type: decidePhotoFormat(img.orig),
-            comment: img.cmt
+            original: spl[1],
+            thumb: spl[0],
+            type: decidePhotoFormat(spl[1]),
+            comment: spl[2]
         };
 
         dbase.photos.insert(doc, (err, doc) => {
