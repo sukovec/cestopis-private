@@ -7,9 +7,9 @@ import "reflect-metadata";
 
 let dbase = new db();
 
-let fileTags = fs.readFileSync("/home/suk/code/php-photo-tagger/tags.txt");
-let fileKeys = fs.readFileSync("/home/suk/code/php-photo-tagger/tagkeys.txt");
-let fileTrans = fs.readFileSync("/home/suk/code/php-photo-tagger/tagtranslate.translate");
+let fileTags = fs.readFileSync("/home/suk/code/php-photo-tagger/tags.txt", {encoding: "utf8"} );
+let fileKeys = fs.readFileSync("/home/suk/code/php-photo-tagger/tagkeys.txt", {encoding: "utf8"} );
+let fileTrans = fs.readFileSync("/home/suk/code/php-photo-tagger/tagtranslate.translate", {encoding: "utf8"} );
 
 let taglines = fileTags.toString().split("\n");
 let keylines = fileKeys.toString().split("\n");

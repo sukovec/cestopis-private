@@ -38,7 +38,7 @@ export interface Photo {
     _id?: string;
     tags: PhotoTagset;
     source: PhotoSource;
-    date: Date;
+    date: number;
     folder: string;
     original: string;
     thumb: string;

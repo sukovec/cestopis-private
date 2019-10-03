@@ -1,10 +1,14 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as parse from "csv-parse/lib/sync";
-import * as exif from "exif";
+import * as moment from "moment";
+
+const exif = require("node-exiftool");
+const exifproc = new exif.ExiftoolProcess();
 
 import "reflect-metadata";
 
+import CFG from "../app/const/config";
 import * as API from "../app/common/ifaces";
 import db from "../app/sup/db";
 
@@ -12,6 +16,9 @@ import db from "../app/sup/db";
 let dbase = new db();
 
 let thumbdir = "/var/www/vps.sukovec.cz/thumbs";
+
+let Photodocs: Array<API.Photo> = [];
+let nodatenum = Number.MIN_SAFE_INTEGER; // for the images with no date or even no file (shouldn't exist at all, but for the case...)
 
 type tagbase = {[key: string]: API.PhotoTag};
 
@@ -33,8 +40,7 @@ function loadTags(dbase: db): Promise<tagbase> {
 function processPhotos(thumbdir: string, dbase: db, tb: tagbase) {
     let dirs = fs.readdirSync(thumbdir);
 
-    dirs.forEach( (dir) => {
-        //let directory = path.join(thumbdir, dir);
+    dirs.map((dir) => {
         let tagfile = path.join(thumbdir, dir, ".tag-index");
         if (fs.existsSync(tagfile)) {
             readCsvFile(tagfile, dir, dbase, tb);
@@ -97,10 +103,6 @@ function decidePhotoFormat(fname: string): API.PhotoType {
     return API.PhotoType.oth; // something other, TODO: add format for video
 }
 
-function parseDate(dir: string, fname: string) {
-    return new Date();
-}
-
 function parseTags(tags: string, tb: tagbase): API.PhotoTagset {
     let ret: API.PhotoTagset = {};
     if (tags == "") return ret;
@@ -109,40 +111,82 @@ function parseTags(tags: string, tb: tagbase): API.PhotoTagset {
         let spl = itm.split(":");
 
         let usedTag = tb[spl[0]];
-        console.log(`Parsing: '${itm}', got '${spl[0]}' and ${spl[1]}`);
         ret[usedTag._id] = { subtag: spl[1] };
     });
 
     return ret;
 }
 
-// TODO: Need to do this with some ini-parser for real data
 function readCsvFile(fname: string, dir: string, dbase: db, tb: tagbase) {
-    
-    let file = fs.readFileSync(fname, { encoding: "utf8"}).toString();
-    let data = parse(file, {columns: false, skip_empty_lines: true, delimiter: ";"});
+    let file = fs.readFileSync(fname, { encoding: "utf8" }).toString();
+    let data = parse(file, { columns: false, skip_empty_lines: true, delimiter: ";" });
 
-    data.forEach( (spl: string[]) => {
-        let doc: API.Photo = {
+    data.forEach((spl: string[]) => {
+        Photodocs.push({
             tags: parseTags(spl[3], tb),
             source: decidePhotoSource(dir, fname),
-            date: parseDate(dir, fname),
+            date: 0, /// will be read from EXIF
             folder: dir,
             original: spl[1],
             thumb: spl[0],
             type: decidePhotoFormat(spl[1]),
             comment: spl[2]
-        };
-
-        dbase.photos.insert(doc, (err, doc) => {
-            console.assert(err == null, "The document was not inserted");
-
-            console.log(`ID: ${doc._id}, file: ${doc.folder}/${doc.original}`);
         });
-    })
+    });
+};
+/*
+        return 
+        */
+    //})
+
+function addExifInfo(doc: API.Photo, exifproc: any): Promise<API.Photo> {
+    console.log(`addExifInfo: ${doc.folder}/${doc.original}`);
+    return exifproc.readMetadata(path.join(CFG.rawPath, doc.folder, doc.original), ["-File:all"])
+    .then( (res: any) => {
+        if (res.error && res.data == null){
+            doc.date = nodatenum++; // indicate problem
+            return doc; // nothing inside
+        } 
+        let obj = res.data[0];
+        let parsdate = moment.utc(obj.CreateDate, "YYYY:MM:DD HH:mm:ss", true).add(-5, "hour");
+        doc.date = parsdate.unix();
+        return doc;
+    });
 }
-console.log("loadtags");
-loadTags(dbase).then( (res) => {
-    console.log("processPhotos");
+
+function saveToDatabase(doc: API.Photo, dbase: db): Promise<API.Photo> {
+    return new Promise( (res, rej) => {
+        console.log(`saveToDatabase: ${doc.folder}/${doc.original}`)
+        dbase.photos.insert(doc, (err, doc) => {
+            if (err) return rej(err);
+
+            console.log(`    ID: ${doc._id}, dtime: ${doc.date}`);
+            
+            res(doc);
+        });
+    });
+}
+
+exifproc.open().then( () => {
+    console.log("started exif process, load tags");
+    return loadTags(dbase);
+}).then( (res: tagbase) => {
+    console.log("process all those csvs");
     processPhotos(thumbdir, dbase, res);
-});
+    console.log(`Processed, have ${Photodocs.length} documents prepared`);
+    console.log("-------------------------");
+
+    let prm: Promise<any> = Promise.resolve();
+    for (let i = 0; i < Photodocs.length; i++) {
+        prm = prm.then( () => {
+            return addExifInfo(Photodocs[i], exifproc);
+        }).then( (res: API.Photo) => {
+            return saveToDatabase(res, dbase);
+        });
+    }
+    return prm;
+
+}).then( () => {
+    console.log("Closing...");
+    exifproc.close();
+})
