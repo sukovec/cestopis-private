@@ -1,11 +1,11 @@
 import { h, render } from "preact";
 import { Component } from "preact";
-import { IDefProps } from "../iface";
+import { IDefProps } from "../../iface";
 
 import * as L from "leaflet"
-import layers from "../const/maplayers";
+import layers from "../../const/maplayers";
 
-import { RoutePoint, RoutePointMode, LatLng } from "../common/ifaces";
+import { RoutePoint, RoutePointMode, LatLng } from "../../common/ifaces";
 
 interface MapProps extends IDefProps {
     //view: [ number, number];

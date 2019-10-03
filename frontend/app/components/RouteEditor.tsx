@@ -6,7 +6,7 @@ import List from "preact-material-components/List";
 
 import { IDefProps } from "../iface";
 
-import RouteEditorEdit from "./RouteEditorEdit";
+import RouteEdit from "./RouteEditor/Edit";
 
 export interface RouteEditorProps extends IDefProps {
 	action?: string;
@@ -18,9 +18,9 @@ export default function RouteEditor(props: RouteEditorProps) {
 	if (props.action === "" || props.action === "list") {
 		return <RouteEditorList />
 	} else if (props.action === "create") {
-		return <RouteEditorEdit createNew={true} />
+		return <RouteEdit createNew={true} />
 	} else if (props.action === "edit" && props.id != "") {
-		return <RouteEditorEdit createNew={false} idRoute={props.id} />
+		return <RouteEdit createNew={false} idRoute={props.id} />
 	} else {
 		return <h1>Route editor - error (action: {props.action}, id: {props.id}</h1>;
 	}

@@ -1,0 +1,2 @@
+@import url('mobile.css') only screen and (orientation: portrait);
+@import url('laptop.css') only screen and (orientation: landscape);

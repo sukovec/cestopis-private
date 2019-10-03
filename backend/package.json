@@ -10,9 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "@types/body-parser": "^1.17.1",
+    "@types/exif": "^0.6.0",
     "@types/express": "^4.17.1",
     "@types/nedb": "^1.8.9",
     "@types/node-fetch": "^2.5.2",
+    "exif": "^0.6.0",
     "express": "^4.17.1",
     "inversify": "^5.0.1",
     "inversify-binding-decorators": "^4.0.0",

@@ -84,13 +84,17 @@ export enum APIResponseResult {
 export type RespRoute = LatLng[];
 export type RespID = string;
 export type RespPhotoDirlist = string[];
-
+export type RespPhotoList = string[];
+export type RespTagList = PhotoTag[];
 
 export type APIPossibleResponse = 
     void | 
     RespRoute | 
+    Photo |
+    RespTagList | 
     RespID | 
-    RespPhotoDirlist;
+    RespPhotoDirlist | 
+    RespPhotoList;
     
 export interface APIResponse<T extends APIPossibleResponse > {
     result: APIResponseResult;

@@ -3,19 +3,19 @@ import { h, Component } from "preact";
 import List from "preact-material-components/List";
 import Button from "preact-material-components/Button";
 
-import { IDefProps } from "../iface";
-import * as API from "../common/ifaces";
+import { IDefProps } from "../../iface";
+import * as API from "../../common/ifaces";
 
-export interface RoutePointListProps extends IDefProps {
+export interface PointListProps extends IDefProps {
     points: API.RoutePoint[];
     onRemoveClick?: (idx: number) => void;
     onInsertClick?: (idx: number) => void;
 }
 
-export interface RoutePointListStat {
+export interface PointListStat {
 }
 
-export default class RoutePointList extends Component<RoutePointListProps, RoutePointListStat> {
+export default class RoutePointList extends Component<PointListProps, PointListStat> {
     renderPoint(rp: API.RoutePoint, idx: number, arr: API.RoutePoint[]) {
         let rmPointButton = arr.length -1 == idx ? <Button onClick={() => {this.props.onRemoveClick && this.props.onRemoveClick(idx); }}>Rm</Button> : null;
         

@@ -6,6 +6,7 @@ import Button from 'preact-material-components/Button';
 import TopAppBar from 'preact-material-components/TopAppBar';
 import 'preact-material-components/style.css';
 
+import "../styles/css.css"
 
 import RouteEditor from "./RouteEditor";
 import PhotoTagger from "./PhotoTagger";
@@ -19,7 +20,7 @@ export function App(props: any) {
 		<Router history={createHashHistory()}>
 			<h1 path="/articles">Artikly</h1>
 			<RouteEditor path="/routes/:action?/:id?" />
-			<PhotoTagger path="/photos/:directory?/:photo?" />
+			<PhotoTagger path="/photos/:action?/:id?/:id2?" />
 		</Router>
 	</div>;
 }

@@ -3,18 +3,18 @@ import { route } from "preact-router";
 import { LeafletMouseEvent } from "leaflet";
 
 // components
-import { IDefProps } from "../iface";
-import * as API from "../common/ifaces";
+import { IDefProps } from "../../iface";
+import * as API from "../../common/ifaces";
 
-interface PTDLProps extends IDefProps {
+interface DirListProps extends IDefProps {
 }
 
-interface PTDLStat {
+interface DirListStats {
     dirlist: API.RespPhotoDirlist,
     error: string
 }
 
-export default class RouteEditorEdit extends Component<PTDLProps, PTDLStat> {
+export default class DirList extends Component<DirListProps, DirListStats> {
 
     constructor() {
         super();
@@ -52,10 +52,10 @@ export default class RouteEditorEdit extends Component<PTDLProps, PTDLStat> {
         } else if (error != null && dirlist != null) {
             return <h1>PhotoTaggerDirlist WTF state</h1>;
         } else {
-            // <a onClick={() => {route(`/photos/${itm}`)}}>{itm}</a>
             return <ul>
                 {dirlist.map(itm => <li>
-                    <a href={`/photos/${itm}`}>{itm}</a>
+                    <a href={`/photos/dir/${itm}`}>{itm}</a> | 
+                    <a href={`/photos/multitag/${itm}`}>MULTI</a> | 
                     </li>)
                 }
                 </ul>

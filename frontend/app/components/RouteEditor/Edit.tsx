@@ -8,25 +8,25 @@ import Button from 'preact-material-components/Button';
 import TextField from "preact-material-components/TextField";
 import Select from "preact-material-components/Select";
 
-import { IDefProps } from "../iface";
+import { IDefProps } from "../../iface";
 import Map from "./Map";
-import RoutePointList from "./RoutePointList";
+import RoutePointList from "./PointList";
 
-import * as API from "../common/ifaces";
+import * as API from "../../common/ifaces";
 
-interface IREEProps extends IDefProps {
+interface EditProps extends IDefProps {
     createNew: boolean;
     idRoute?: string;
 }
 
-interface IREEStat {
+interface EditStat {
     routePoints: API.RoutePoint[];
     txDetail: string;
     transportType: string;
     comment: string;
 }
 
-export default class RouteEditorEdit extends Component<IREEProps, IREEStat> {
+export default class RouteEdit extends Component<EditProps, EditStat> {
     private route: boolean;
 
     constructor() {
