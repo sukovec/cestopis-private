@@ -49,10 +49,6 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
         })
     }
 
-    componentWillUnmount() {
-        super.componentWillUnmount();
-    }
-
     tagChanged(tag: API.PhotoTag, newState: boolean, subtag?: string) {
  //       console.log(`TagSwitches::tagChanged(${tag._id}/${tag.tagName}, ${newState}, ${subtag})`);
         let isSet = this.props.setTags.hasOwnProperty(tag._id);

@@ -1,5 +1,5 @@
 import { h, render, Component } from "preact";
-
+import { route } from "preact-router"
 // components
 import { IDefProps } from "../../iface";
 import * as API from "../../common/ifaces";
@@ -17,6 +17,7 @@ interface TaggerStats {
     error: string;
     nextId: string;
     prevId: string;
+    dir: string;
 }
 
 export default class DirList extends Component<TaggerProps, TaggerStats> {
@@ -28,12 +29,14 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
             comment: null,
             error: null,
             nextId: null,
-            prevId: null
+            prevId: null,
+            dir: null
         };
 
         this.addTag = this.addTag.bind(this);
         this.removeTag = this.removeTag.bind(this);
         this.onCommentChange = this.onCommentChange.bind(this);
+        this.saveAndProceed = this.saveAndProceed.bind(this);
     }
 
     componentDidMount() {
@@ -51,7 +54,13 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
             if (res.result == API.APIResponseResult.Fail) {
                 this.setState({loaded: false, error: res.resultDetail });
             } else {
-                this.setState({loaded: true, error: null, comment: res.data.comment, tags: {...res.data.tags} })
+                this.setState({
+                    loaded: true, 
+                    error: null, 
+                    comment: res.data.comment, 
+                    tags: {...res.data.tags} ,
+                    dir: res.data.folder
+                });
             }
         }).catch( (ex: any) => {
             this.setState( {loaded: false, error: ex.toString()});
@@ -69,6 +78,27 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
         }).catch( (ex: any) => {
             console.error("Error while receiving 'around photo' info, but not fatal", ex);
             this.setState({nextId: null, prevId: null});
+        });
+    }
+
+    saveAndProceed() {
+        let body = {
+            comment: this.state.comment,
+            tags: this.state.tags
+        };
+        fetch(`/api/photos/photo/${this.props.photoId}/info`, { 
+            method: "POST", 
+            cache: "no-cache", 
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(body)})
+        .then( res => res.json())
+        .then( (res: API.APIResponse<void>) => {
+            if (res.result == API.APIResponseResult.OK) {
+                if (this.state.nextId)
+                    route(`/photos/tag/${this.state.nextId}`);
+                else 
+                    route(`/photos/dir/${this.state.dir}`);
+            }
         });
     }
 
@@ -99,7 +129,7 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
     /*          RENDER          */
     //////////////////////////////
     render() {
-        const {loaded, error, comment, tags, prevId, nextId} = this.state;
+        const {loaded, error, comment, tags, prevId, nextId, dir} = this.state;
         
         if(!loaded && error == null) {
             return <h1>Loading photo info ...</h1>
@@ -112,11 +142,17 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
             let next = nextId ? <a href={`/photos/tag/${nextId}`}>&gt;&gt;</a> : undefined;
             return <div>
                     <TagSwitches setTags={tags} onTagAdd={this.addTag} onTagRemove={this.removeTag} />
-                    <div class="descript"><input type="text" value={comment} onInput={this.onCommentChange} /></div>
+                    <div class="descript">
+                        <input type="text" value={comment} onInput={this.onCommentChange} />
+                        <input type='submit' value='yeah' onClick={this.saveAndProceed} />
+                    </div>
                     <img src={`/api/photos/photo/${this.props.photoId}/thumb`} />
 
                     <div class="navig">
-                        {prev} {next}
+                        {prev}
+                        <a href={`/photos/dir/${dir}`}>DAY</a>
+                        <a href={`/photos/`}>ALL</a>
+                        {next}
                     </div>
                 </div>
         }

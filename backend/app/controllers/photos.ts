@@ -48,7 +48,7 @@ export class PhotosController {
             let search = {};
             if (dir !== null) search = { folder: dir };
 
-            this.database.photos.find(search, { _id: 1 }, (err, docs: any[]) => {
+            this.database.photos.find(search, { _id: 1 }).sort({date: 1}).exec( (err, docs: any[]) => {
                 if (err) return rej(err);
 
                 let ret: API.APIResponse<API.RespPhotoList> = {
@@ -104,8 +104,34 @@ export class PhotosController {
         return new Promise( (res, rej) => {});
     }
 
+    @httpPost("/photo/:id/info")
+    public updatePhotoMetadata(@requestParam("id") id: string, @requestBody() body: any ): Promise<API.APIResponse<void>> { // TODO: make a interface for update
+        return new Promise( (res, rej) => {
+            this.database.photos.update(
+                {_id: id}, 
+                {
+                    $set: {
+                        comment: body.comment,
+                        tags: body.tags
+                    }
+                },
+                {}, 
+                (err, numAffected) => {
+                    if (err) rej(err);
+                    
+                    res(
+                        {
+                            result: numAffected == 0 ? API.APIResponseResult.Fail : API.APIResponseResult.OK,
+                            resultDetail: numAffected == 0 ? "Somehow, nothing have changed" : undefined,
+                            data: undefined
+                        }
+                    )
+                });
+        });
+    }
+
     @httpGet("/photo/:id/info")
-    public getPhotoInfo(@requestParam("id") id: string, @response() resp: express.Response) {
+    public getPhotoMetadata(@requestParam("id") id: string) {
         return this.getPhotoById(id).then((doc) => {
             let ret: API.APIResponse<API.RespPhotoInfo> = {
                 result: API.APIResponseResult.OK,
@@ -129,10 +155,6 @@ export class PhotosController {
 
         let docPrev = await this.getPreviousPhoto(photo.date, photo.folder);
         let docNext = await this.getNextPhoto(photo.date, photo.folder);
-
-        console.log("cur:", photo);
-        console.log("prev:", docPrev);
-        console.log("next", docNext);
 
         let prev = undefined;
         let next = undefined;
