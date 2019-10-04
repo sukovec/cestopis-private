@@ -14,7 +14,7 @@ export default class PhotoService {
         database.phtags.findOne({tagName: "place"}, {_id: 1}, (err, doc: any) => {
             if (err) {
                 console.error("ERROR: Finding photo-tag 'place' raised an error");
-                consle.error(err);
+                console.error(err);
                 return;
             }
 
