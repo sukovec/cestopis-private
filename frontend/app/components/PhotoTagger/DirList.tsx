@@ -54,7 +54,7 @@ export default class DirList extends Component<DirListProps, DirListStats> {
                     <tr><th>Folder</th><th>MultiTag</th><th>Count total</th><th>Untagged</th><th>Places</th></tr>
                 {dirlist.map(itm => <tr>
                     <td><a href={`/photos/dir/${itm.dirName}`}>{itm.dirName}</a></td>
-                    <td><a href={`/photos/multitag/${itm}`}>MULTI</a></td>
+                    <td><a href={`/photos/multitag/${itm.dirName}`}>MULTI</a></td>
                     <td>{itm.photos}</td>
                     <td class={itm.untagged == 0 ? "perfect" : (itm.untagged == itm.photos ? "untouched" : "notbad")}>{itm.untagged}</td>
                     <td>{itm.places.join(", ")}</td>

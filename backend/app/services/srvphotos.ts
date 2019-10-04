@@ -13,9 +13,16 @@ export default class PhotoService {
     constructor(@inject(TYPES.database) private database: db) {
         database.phtags.findOne({tagName: "place"}, {_id: 1}, (err, doc: any) => {
             if (err) {
-                console.error("Cannot find id of photo-tag 'place'");
+                console.error("ERROR: Finding photo-tag 'place' raised an error");
+                consle.error(err);
                 return;
             }
+
+            if (!doc) {
+                console.warn("Warning: not found tag 'place'");
+                return;
+            }
+
             console.log("Found id of 'place' tag");
             this.idTagPlace = doc._id;
         });
