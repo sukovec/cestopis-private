@@ -10,7 +10,7 @@ import "reflect-metadata";
 
 import CFG from "../app/const/config";
 import * as API from "../app/common/ifaces";
-import db from "../app/sup/db";
+import db from "../app/services/db";
 
 // for this it's necessarry to comment lines 5 and 7 (if not changed since this commit) in db.ts file
 let dbase = new db();

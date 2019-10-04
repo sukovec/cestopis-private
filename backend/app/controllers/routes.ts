@@ -1,7 +1,7 @@
 import { controller, httpGet, requestBody, httpPost } from 'inversify-express-utils';
 import { inject } from "inversify"
 import TYPES from "../const/types";
-import db from "../sup/db";
+import db from "../services/db";
 
 import * as API from "../common/ifaces";
 import fetch from "node-fetch";

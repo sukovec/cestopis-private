@@ -5,58 +5,25 @@ import * as path from "path";
 
 import CFG from "../const/config";
 import TYPES from "../const/types";
-import db from "../sup/db";
+import db from "../services/db";
+import PhotoService from "../services/srvphotos";
 
 import * as API from "../common/ifaces";
 
 // lot of code in PhotosController MUST be rewritten to some singleton service!
 @controller('/api/photos')
 export class PhotosController {
-    private idTagPlace = "xyz";
-    constructor(@inject(TYPES.database) private database: db) {
-        database.phtags.findOne({tagName: "place"}, {_id: 1}, (err, doc: any) => {
-            if (err) {
-                console.error("Cannot find id of photo-tag 'place'");
-                return;
-            }
-            console.log("Found id of 'place' tag");
-            this.idTagPlace = doc._id;
-        });
+    constructor(@inject(TYPES.database) private database: db, @inject(TYPES.PhotoService) private photosrv: PhotoService) {
+
     }
 
     @httpGet("/dirs")
-    public getPhotoDirlist(): Promise<API.APIResponse<API.RespPhotoDirlist>> { // TODO: make a interface
-        return new Promise((res, rej) => {
-            this.database.photos.find({}, (err: any, docs: API.Photo[]) => {
-                if (err) return rej(err);
-
-                let prepdata = docs.reduce( (retobj: any, cur: API.Photo) => {
-                    if (retobj[cur.folder] == undefined)
-                        retobj[cur.folder] = { dirName: cur.folder, photos: 0, untagged: 0, places: new Set()};
-
-                    retobj[cur.folder].photos++;
-                    if (Object.keys(cur.tags).length == 0)
-                        retobj[cur.folder].untagged++;
-                    
-                    if (cur.tags[this.idTagPlace])
-                        retobj[cur.folder].places.add(cur.tags[this.idTagPlace].subtag);
-
-                    return retobj;
-                }, {});
-
-                let retdata: API.DirectoryStats[] = Object.keys(prepdata).map( (itm) => {
-                    let ret = prepdata[itm];
-                    ret.places = Array.from(ret.places);
-                    return ret;
-                });
-
-                res(
-                    {
-                        result: API.APIResponseResult.OK,
-                        data: retdata
-                    });
-            });
-        });
+    public async getPhotoDirlist(): Promise<API.APIResponse<API.RespPhotoDirlist>> {
+        let data = await this.photosrv.getPhotoDirlist();
+        return {
+                result: API.APIResponseResult.OK,
+                data: data
+            };
     }
 
     @httpGet("/photos")

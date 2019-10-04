@@ -1,5 +1,5 @@
 import * as API from "../app/common/ifaces";
-import db from "../app/sup/db";
+import db from "../app/services/db";
 
 import * as fs from "fs";
 import "reflect-metadata";

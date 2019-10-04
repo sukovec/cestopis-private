@@ -9,7 +9,8 @@ import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-util
 import { buildProviderModule } from "inversify-binding-decorators";
 
 // support
-import "./sup/db"
+import "./services/db"
+import "./services/srvphotos";
 
 // controllers:
 import "./controllers/routes";
