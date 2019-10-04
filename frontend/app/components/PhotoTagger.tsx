@@ -25,7 +25,7 @@ export default function PhotoTagger(props: PhotoTaggerProps) {
 		case "dir":
 			return <PhotoList dir={props.id} />
 		case "tag":
-			return <Tagger photo={props.id} />
+			return <Tagger photoId={props.id} />
 		case "multi":
 			return <MultiTag dir={props.id} tag={props.id2} />
 	}

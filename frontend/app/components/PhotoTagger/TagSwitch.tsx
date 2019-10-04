@@ -12,7 +12,7 @@ interface TagswitchProps extends IDefProps {
 
     // events:
 
-    onChange?: (tag: API.PhotoTag, set: API.PhotoSetTag) => void
+    onChange?: (newState: boolean, subtag?: string) => void
 }
 
 interface TagswitchStat {   
@@ -26,18 +26,8 @@ export default class TagSwitch extends Component<TagswitchProps, TagswitchStat> 
 
     onclick(evt: MouseEvent) {
         let target = evt.target as HTMLInputElement;
-        let st: API.PhotoSetTag = null;
 
-        if (target.checked) {
-            // let take it easy without setting sub-tags (right now) // TODO!
-            st = {
-                tag: this.props.tag.tagName // this should be ID, shouldn't it?
-                // leave subtag forever empty
-            }
-        }
-
-        if (this.onclick) 
-            this.props.onChange(this.props.tag, st);
+        if (this.onclick) this.props.onChange(target.checked);
     }
 
     //////////////////////////////

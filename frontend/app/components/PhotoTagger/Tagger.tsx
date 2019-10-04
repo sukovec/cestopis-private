@@ -1,5 +1,4 @@
 import { h, render, Component } from "preact";
-import { route } from "preact-router";
 
 // components
 import { IDefProps } from "../../iface";
@@ -8,11 +7,13 @@ import * as API from "../../common/ifaces";
 import TagSwitches from "./TagSwitches";
 
 interface TaggerProps extends IDefProps {
-    photo: string;
+    photoId: string;
 }
 
 interface TaggerStats {
-    photoInfo: API.Photo,
+    loaded: boolean, 
+    tags: API.PhotoTagset;
+    comment: string;
     error: string
 }
 
@@ -20,44 +21,67 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
     constructor() {
         super();
         this.state = {
-            photoInfo: null,
+            loaded: false,
+            tags: null,
+            comment: null,
             error: null
         };
+
+        this.addTag = this.addTag.bind(this);
+        this.removeTag = this.removeTag.bind(this);
     }
 
     componentDidMount() {
-        fetch(`/api/photos/photo/${this.props.photo}/info`, {
+        fetch(`/api/photos/photo/${this.props.photoId}/info`, {
             method: "GET",
             cache: "no-cache"})
         .then(res => res.json())
         .then( (res: API.APIResponse<API.Photo>) => {
             if (res.result == API.APIResponseResult.Fail) {
-                this.setState({photoInfo: null, error: res.resultDetail });
+                this.setState({loaded: false, error: res.resultDetail });
             } else {
-                this.setState({photoInfo: res.data, error: null })
+                this.setState({loaded: true, error: null, comment: res.data.comment, tags: {...res.data.tags} })
             }
         }).catch( (ex: any) => {
-            this.setState( {photoInfo: null, error: ex.toString()});
+            this.setState( {loaded: false, error: ex.toString()});
         })
+    }
+
+    addTag(tag: API.PhotoTag, subtag: string) {
+        console.log(`Tagger::addTag(${tag._id}/${tag.tagName}, ${subtag})`);
+        this.setState( (oldstate) => {
+            let newtags: API.PhotoTagset = {...oldstate.tags};
+            newtags[tag._id] = {subtag: subtag};
+            return { tags: newtags};
+        });
+    }
+
+    removeTag(tag: API.PhotoTag) {
+        console.log(`Tagger::removeTag(${tag._id}/${tag.tagName})`);
+
+        this.setState( (oldstate) => {
+            let newtags: API.PhotoTagset = {...oldstate.tags};
+            delete newtags[tag._id];
+            return { tags: newtags};
+        });
     }
 
     //////////////////////////////
     /*          RENDER          */
     //////////////////////////////
     render() {
-        let info = this.state.photoInfo;
-        let error = this.state.error;
-
-        if(info == null && error == null) {
+        const {loaded, error, comment, tags} = this.state;
+        
+        if(!loaded && error == null) {
             return <h1>Loading photo info ...</h1>
-        } else if (info == null && error != null) {
+        } else if (!loaded && error != null) {
             return <h1>Error: {error}</h1>
-        } else if (error != null && info != null) {
-            return <h1>Tagger WTF state</h1>;
+        } else if (error != null && loaded) {
+            return <h1>Tagger pseudoWTF state</h1>;
         } else {
             return <div>
-                    <TagSwitches setTags={info.tags} />
-                    <img src={`/api/photos/photo/${this.props.photo}/thumb`} />
+                    <TagSwitches setTags={tags} onTagAdd={this.addTag} onTagRemove={this.removeTag} />
+                    <img src={`/api/photos/photo/${this.props.photoId}/thumb`} />
                 </div>
         }
         

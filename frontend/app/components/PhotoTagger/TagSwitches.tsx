@@ -9,20 +9,12 @@ import * as API from "../../common/ifaces";
 import TagSwitch from "./TagSwitch";
 
 interface TagswitchesProps extends IDefProps {
-    setTags: API.PhotoSetTag[];
+    setTags: API.PhotoTagset,
+    onTagAdd?: (tag: API.PhotoTag, subtag: string) => void,
+    onTagRemove?: (tag: API.PhotoTag) => void
 }
 
 interface TagswitchesStat {
-    setTags: { [id: string]: API.PhotoSetTag}, // do it here on in tthe parent?
-    // fuck, I don't know
-    // maybe I should reconsider PhotoSetTag[] to PhotoSetTags: { [_id]: { set-subtag-name, whatever }}
-    // oh yeah, I will do next time
-    // go to sleep and don't forget to do it next time
-    // so: change it from array to map-object
-    // don't forget to rewrite database-convertor (with inifile)
-    // but still try to think about it little bit (is it even good idea?)
-    // I think it is (unlike not-using classic database)
-    /// buena noche
     tagList: API.PhotoTag[];
     error: string
 }
@@ -31,37 +23,59 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
     constructor(props: TagswitchesProps) {
         super(props)
 
-        let stags = props.setTags.reduce((prev:any, cur) => {
-            prev[cur.tag] = cur;
-            return prev;
-        }, {});
-
         this.state = {
-            setTags: stags,
             tagList: null,
             error: null
         };
     }
 
     componentDidMount() {
+        //this.tagmap = {};
         fetch(`/api/photos/tags`, { cache: "no-cache"})
         .then(res => res.json())
-        .then( (res: API.APIResponse<API.PhotoTag[]>) => {
+        .then( (res: API.APIResponse<API.RespTagList>) => {
             if (res.result == API.APIResponseResult.Fail) {
                 this.setState({tagList: null, error: res.resultDetail });
             } else {
                 this.setState({tagList: res.data, error: null })
+                //res.data.forEach( (itm) => {this.tagmap[itm._id] = itm});
             }
         }).catch( (ex: any) => {
             this.setState( {tagList: null, error: ex.toString()});
         })
     }
 
+    componentWillUnmount() {
+        super.componentWillUnmount();
+    }
+
+    tagChanged(tag: API.PhotoTag, newState: boolean, subtag?: string) {
+        console.log(`TagSwitches::tagChanged(${tag._id}/${tag.tagName}, ${newState}, ${subtag})`);
+        let isSet = this.props.setTags.hasOwnProperty(tag._id);
+
+        if ((newState && isSet) || (!newState && !isSet)) {
+            console.error("The supposed state change cannot be done, as it's already in wanted state");
+            console.log(this.props);
+            console.log(this.state);
+            return;
+        }
+
+        if (newState) {
+            console.log("    TagSwitches::tagChanged: adding");
+            if (this.props.onTagAdd) this.props.onTagAdd(tag, subtag);
+        }
+        else {
+            console.log("    TagSwitches::tagChanged: removing");
+            if (this.props.onTagRemove) this.props.onTagRemove(tag);
+        } 
+    }
+
     //////////////////////////////
     /*          RENDER          */
     //////////////////////////////
     render() {
-        const { tagList, setTags, error } = this.state;
+        const { tagList, error } = this.state;
+        const { setTags } = this.props;
 
         if(tagList == null && error == null) {
             return <h1>Loading tag list</h1>
@@ -73,7 +87,8 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
 
         return <div>{tagList.map((item => {
             if (item.hidden) return null;
-            return <TagSwitch tag={item} set={setTags[item.tagName]} />
+            let cback = this.tagChanged.bind(this, item);
+            return <TagSwitch tag={item} set={setTags[item._id]} onChange={cback} />
         }))}</div>;
     }
 }
