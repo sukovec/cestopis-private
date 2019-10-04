@@ -25,6 +25,12 @@ export default class PhotoTaggerPhotolist extends Component<PhotoListProps, Phot
     }
 
     componentDidMount() {
+        this.componentDidUpdate({dir:null});
+    }
+
+    componentDidUpdate(prevProps: PhotoListProps) {
+        if(prevProps.dir == this.props.dir) return;
+        
         fetch(`/api/photos/photos/${this.props.dir}`, {
             method: "GET",
             cache: "no-cache"})

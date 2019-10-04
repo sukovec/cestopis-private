@@ -1,3 +1,7 @@
+/************************************
+ *              PHOTOS              *
+ ************************************/
+
 export interface PhotoSubTag {
     tagName: string;
     translation?: string;
@@ -25,6 +29,10 @@ export enum PhotoType {
     oth = "other"
 };
 
+export interface PhotoAround {
+    prev: string;
+    next: string;
+}
 
 export interface PhotoSetTag {
     subtag?: string;
@@ -45,6 +53,10 @@ export interface Photo {
     type: PhotoType;
     comment: string;
 };
+
+/************************************
+ *              ROUTES              *
+ ************************************/
 
 export enum RouteTransportMethod {
     hitch = "hitchhiking", 
@@ -90,15 +102,18 @@ export type RespID = string;
 export type RespPhotoDirlist = string[];
 export type RespPhotoList = string[];
 export type RespTagList = PhotoTag[];
+export type RespPhotoAround = PhotoAround;
+export type RespPhotoInfo = Photo;
 
 export type APIPossibleResponse = 
     void | 
     RespRoute | 
-    Photo |
+    RespPhotoInfo |
     RespTagList | 
     RespID | 
     RespPhotoDirlist | 
-    RespPhotoList;
+    RespPhotoList |
+    RespPhotoAround;
     
 export interface APIResponse<T extends APIPossibleResponse > {
     result: APIResponseResult;

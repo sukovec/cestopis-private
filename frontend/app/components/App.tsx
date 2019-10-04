@@ -13,9 +13,9 @@ import PhotoTagger from "./PhotoTagger";
 
 export function App(props: any) {
 	return <div id="app">
-		<Button outlined onclick={() => route("articles")}>Articles</Button>
-		<Button outlined onclick={() => route("routes")}>Routes</Button>
-		<Button outlined onclick={() => route("photos")}>Photos</Button>
+		<Button outlined onclick={() => route("/articles")}>Articles</Button>
+		<Button outlined onclick={() => route("/routes")}>Routes</Button>
+		<Button outlined onclick={() => route("/photos")}>Photos</Button>
 		<hr />	
 		<Router history={createHashHistory()}>
 			<h1 path="/articles">Artikly</h1>

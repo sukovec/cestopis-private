@@ -14,7 +14,9 @@ interface TaggerStats {
     loaded: boolean, 
     tags: API.PhotoTagset;
     comment: string;
-    error: string
+    error: string;
+    nextId: string;
+    prevId: string;
 }
 
 export default class DirList extends Component<TaggerProps, TaggerStats> {
@@ -24,19 +26,28 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
             loaded: false,
             tags: null,
             comment: null,
-            error: null
+            error: null,
+            nextId: null,
+            prevId: null
         };
 
         this.addTag = this.addTag.bind(this);
         this.removeTag = this.removeTag.bind(this);
+        this.onCommentChange = this.onCommentChange.bind(this);
     }
 
     componentDidMount() {
+        this.componentDidUpdate({photoId: null});
+    }
+
+    componentDidUpdate(prevProps: TaggerProps) {
+        if (prevProps.photoId == this.props.photoId) return;
+
+        // fetch photo metadata
         fetch(`/api/photos/photo/${this.props.photoId}/info`, {
-            method: "GET",
             cache: "no-cache"})
         .then(res => res.json())
-        .then( (res: API.APIResponse<API.Photo>) => {
+        .then( (res: API.APIResponse<API.RespPhotoInfo>) => {
             if (res.result == API.APIResponseResult.Fail) {
                 this.setState({loaded: false, error: res.resultDetail });
             } else {
@@ -45,10 +56,28 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
         }).catch( (ex: any) => {
             this.setState( {loaded: false, error: ex.toString()});
         })
+
+        //fetch next and previous photo IDs
+        fetch(`/api/photos/photo/${this.props.photoId}/around`)
+        .then(res => res.json())
+        .then( (res: API.APIResponse<API.RespPhotoAround>) => {
+            if (res.result == API.APIResponseResult.Fail) {
+                console.error("Server error while receiving 'around photo' info, but not fatal", res.resultDetail);
+            } else {
+                this.setState({nextId: res.data.next, prevId: res.data.prev});
+            }
+        }).catch( (ex: any) => {
+            console.error("Error while receiving 'around photo' info, but not fatal", ex);
+            this.setState({nextId: null, prevId: null});
+        });
     }
 
-    addTag(tag: API.PhotoTag, subtag: string) {
-        console.log(`Tagger::addTag(${tag._id}/${tag.tagName}, ${subtag})`);
+    onCommentChange(evt: Event): void {
+        this.setState( { comment: (evt.target as HTMLInputElement).value });
+    }
+
+    addTag(tag: API.PhotoTag, subtag: string): void {
+//        console.log(`Tagger::addTag(${tag._id}/${tag.tagName}, ${subtag})`);
         this.setState( (oldstate) => {
             let newtags: API.PhotoTagset = {...oldstate.tags};
             newtags[tag._id] = {subtag: subtag};
@@ -56,8 +85,8 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
         });
     }
 
-    removeTag(tag: API.PhotoTag) {
-        console.log(`Tagger::removeTag(${tag._id}/${tag.tagName})`);
+    removeTag(tag: API.PhotoTag): void {
+//        console.log(`Tagger::removeTag(${tag._id}/${tag.tagName})`);
 
         this.setState( (oldstate) => {
             let newtags: API.PhotoTagset = {...oldstate.tags};
@@ -70,7 +99,7 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
     /*          RENDER          */
     //////////////////////////////
     render() {
-        const {loaded, error, comment, tags} = this.state;
+        const {loaded, error, comment, tags, prevId, nextId} = this.state;
         
         if(!loaded && error == null) {
             return <h1>Loading photo info ...</h1>
@@ -79,9 +108,16 @@ export default class DirList extends Component<TaggerProps, TaggerStats> {
         } else if (error != null && loaded) {
             return <h1>Tagger pseudoWTF state</h1>;
         } else {
+            let prev = prevId ? <a href={`/photos/tag/${prevId}`}>&lt;&lt;</a> : undefined;
+            let next = nextId ? <a href={`/photos/tag/${nextId}`}>&gt;&gt;</a> : undefined;
             return <div>
                     <TagSwitches setTags={tags} onTagAdd={this.addTag} onTagRemove={this.removeTag} />
+                    <div class="descript"><input type="text" value={comment} onInput={this.onCommentChange} /></div>
                     <img src={`/api/photos/photo/${this.props.photoId}/thumb`} />
+
+                    <div class="navig">
+                        {prev} {next}
+                    </div>
                 </div>
         }
         

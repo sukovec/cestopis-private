@@ -29,6 +29,10 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
         };
     }
 
+    hookKeys(tags: API.PhotoTag[]) {
+
+    }
+
     componentDidMount() {
         //this.tagmap = {};
         fetch(`/api/photos/tags`, { cache: "no-cache"})
@@ -38,7 +42,7 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
                 this.setState({tagList: null, error: res.resultDetail });
             } else {
                 this.setState({tagList: res.data, error: null })
-                //res.data.forEach( (itm) => {this.tagmap[itm._id] = itm});
+                this.hookKeys(res.data);
             }
         }).catch( (ex: any) => {
             this.setState( {tagList: null, error: ex.toString()});
@@ -50,22 +54,22 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
     }
 
     tagChanged(tag: API.PhotoTag, newState: boolean, subtag?: string) {
-        console.log(`TagSwitches::tagChanged(${tag._id}/${tag.tagName}, ${newState}, ${subtag})`);
+ //       console.log(`TagSwitches::tagChanged(${tag._id}/${tag.tagName}, ${newState}, ${subtag})`);
         let isSet = this.props.setTags.hasOwnProperty(tag._id);
 
         if ((newState && isSet) || (!newState && !isSet)) {
-            console.error("The supposed state change cannot be done, as it's already in wanted state");
+ //           console.error("The supposed state change cannot be done, as it's already in wanted state");
             console.log(this.props);
             console.log(this.state);
             return;
         }
 
         if (newState) {
-            console.log("    TagSwitches::tagChanged: adding");
+//            console.log("    TagSwitches::tagChanged: adding");
             if (this.props.onTagAdd) this.props.onTagAdd(tag, subtag);
         }
         else {
-            console.log("    TagSwitches::tagChanged: removing");
+//            console.log("    TagSwitches::tagChanged: removing");
             if (this.props.onTagRemove) this.props.onTagRemove(tag);
         } 
     }

@@ -25,9 +25,7 @@ export default class DirList extends Component<DirListProps, DirListStats> {
     }
 
     componentDidMount() {
-        fetch("/api/photos/dirs", {
-            method: "GET",
-            cache: "no-cache"})
+        fetch("/api/photos/dirs", { cache: "no-cache"})
         .then(res => res.json())
         .then( (res: API.APIResponse<API.RespPhotoDirlist>) => {
             if (res.result == API.APIResponseResult.Fail) {
