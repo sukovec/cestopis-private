@@ -2,6 +2,13 @@
  *              PHOTOS              *
  ************************************/
 
+export interface DirectoryStats {
+    dirName: string;
+    photos: number;
+    untagged: number;
+    places: string[];
+};
+
 export interface PhotoSubTag {
     tagName: string;
     translation?: string;
@@ -99,7 +106,7 @@ export enum APIResponseResult {
 
 export type RespRoute = LatLng[];
 export type RespID = string;
-export type RespPhotoDirlist = string[];
+export type RespPhotoDirlist = DirectoryStats[];
 export type RespPhotoList = string[];
 export type RespTagList = PhotoTag[];
 export type RespPhotoAround = PhotoAround;

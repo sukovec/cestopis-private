@@ -52,7 +52,7 @@ export default class DirList extends Component<DirListProps, DirListStats> {
         } else {
             return <ul>
                 {dirlist.map(itm => <li>
-                    <a href={`/photos/dir/${itm}`}>{itm}</a> | 
+                    <a href={`/photos/dir/${itm.dirName}`}>{itm.dirName}</a> | 
                     <a href={`/photos/multitag/${itm}`}>MULTI</a> | 
                     </li>)
                 }

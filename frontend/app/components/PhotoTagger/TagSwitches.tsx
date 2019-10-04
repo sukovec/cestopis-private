@@ -50,11 +50,9 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
     }
 
     tagChanged(tag: API.PhotoTag, newState: boolean, subtag?: string) {
- //       console.log(`TagSwitches::tagChanged(${tag._id}/${tag.tagName}, ${newState}, ${subtag})`);
         let isSet = this.props.setTags.hasOwnProperty(tag._id);
 
         if ((newState && isSet) || (!newState && !isSet)) {
- //           console.error("The supposed state change cannot be done, as it's already in wanted state");
             console.log(this.props);
             console.log(this.state);
             return;
