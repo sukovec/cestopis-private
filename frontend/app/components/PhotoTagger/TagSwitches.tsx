@@ -84,7 +84,7 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
         }
 
         return <div>{tagList.map((item => {
-            if (item.hidden) return null;
+            if (item.hidden) return null; // TODO: make a possibility to see hidden tags
             let cback = this.tagChanged.bind(this, item);
             return <TagSwitch tag={item} set={setTags[item._id]} onChange={cback} />
         }))}</div>;
