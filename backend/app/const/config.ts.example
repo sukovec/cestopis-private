@@ -3,5 +3,6 @@ export default {
     rawPath: "/home/suk/backed-photo",
     serverPort: 9080,
     serverListen: "0.0.0.0",
-    exportThumbPath: "/var/www/vps.sukovec.cz/test-thumbs"
+    exportThumbPath: "/var/www/vps.sukovec.cz/test-thumbs",
+    databasePath: "/home/suk/code/cestopis/data"
 };

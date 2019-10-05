@@ -1,6 +1,7 @@
 import * as Dataset from "nedb";
 import TYPES from "../const/types"
 import { fluentProvide } from "inversify-binding-decorators"
+import CFG from "../const/config";
 
 let provideSingleton = function(identifier: any) { return fluentProvide(identifier).inSingletonScope().done(); };
 
@@ -11,7 +12,7 @@ export default class Database {
 	public readonly phtags: Dataset;
 
 	constructor() {
-		let path = "/home/suk/code/cestopis/data";
+		let path = CFG.databasePath;
 		this.routes = new Dataset( {filename: `${path}/routes.ndb`, autoload: true });
 		this.photos = new Dataset( {filename: `${path}/photos.ndb`, autoload: true });
 		this.phtags = new Dataset( {filename: `${path}/phtags.ndb`, autoload: true });
