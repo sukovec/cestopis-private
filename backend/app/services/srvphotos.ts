@@ -55,4 +55,24 @@ export default class PhotoService {
             });
         });
     }
+
+    public addPhotoDoc(doc: API.Photo): Promise<string> {
+        return new Promise( (res, rej) => {
+            this.database.photos.insert(doc, (err, doc) => {
+                if (err) return rej(err);
+
+                res(doc._id);
+            });
+        });
+    }
+
+    public removePhotoDoc(id: string): Promise<boolean> {
+        return new Promise( (res, rej) => {
+            this.database.photos.remove({_id: id}, (err, num) => {
+                if (err) return rej(err);
+
+                res(num == 1);
+            });
+        });
+    }
 }

@@ -1,4 +1,4 @@
-import { controller, httpGet, response, requestBody, httpPost, requestParam } from 'inversify-express-utils';
+import { controller, httpGet, response, requestBody, httpPost, httpDelete, requestParam } from 'inversify-express-utils';
 import { inject } from "inversify";
 import * as express from "express";
 import * as path from "path";
@@ -26,11 +26,6 @@ export class PhotosController {
             };
     }
 
-    @httpGet("/photos")
-    public getAllPhotos(@requestParam("dir") dir: string): Promise<API.APIResponse<API.RespPhotoList>> {
-        return this.getPhotoList(null);
-    }
-
     @httpGet("/photos/:dir")
     public getPhotoList(@requestParam("dir") dir: string): Promise<API.APIResponse<API.RespPhotoList>> {
         return new Promise((res, rej) => {
@@ -47,6 +42,47 @@ export class PhotosController {
 
                 res(ret);
             });
+        });
+    }
+    
+    @httpGet("/photos")
+    public getAllPhotos(@requestParam("dir") dir: string): Promise<API.APIResponse<API.RespPhotoList>> {
+        return this.getPhotoList(null);
+    }
+
+    @httpPost("/photo")
+    public addNewPhoto(@requestBody() body: API.Photo): Promise<API.APIResponse<API.RespID>> {
+        return this.photosrv.addPhotoDoc(body)
+        .then( (id: string) => {
+            return {
+                result: API.APIResponseResult.OK,
+                data: id
+            };
+        })
+        .catch( (err) => {
+            return {
+                result: API.APIResponseResult.Fail,
+                resultDetail: err,
+                data: undefined
+            };
+        });
+    }
+
+    @httpDelete("/photo/:id")
+    public removePhoto(@requestParam("id") id: string): Promise<API.APIResponse<void>> {
+        return this.photosrv.removePhotoDoc(id)
+        .then( (okej: boolean) => {
+            return {
+                result: okej ? API.APIResponseResult.OK : API.APIResponseResult.Fail,
+                data: undefined
+            };
+        })
+        .catch( (err) => {
+            return {
+                result: API.APIResponseResult.Fail,
+                resultDetail: err,
+                data: undefined
+            };
         });
     }
 

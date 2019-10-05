@@ -1,0 +1,7 @@
+export default {
+    thumbPath: "/var/www/vps.sukovec.cz/thumbs",
+    rawPath: "/home/suk/backed-photo",
+    serverPort: 9080,
+    serverListen: "0.0.0.0",
+    exportThumbPath: "/var/www/vps.sukovec.cz/test-thumbs"
+};

@@ -8,6 +8,8 @@ import { Container } from "inversify";
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import { buildProviderModule } from "inversify-binding-decorators";
 
+import CFG from "./const/config";
+
 // support
 import "./services/db"
 import "./services/srvphotos";
@@ -33,7 +35,7 @@ server.setConfig((app) => {
 container.load(buildProviderModule())
 
 let app = server.build();
-app.listen(9080);
+app.listen(CFG.serverPort, CFG.serverListen);
 
 console.log("Roonning on http://localhost:9080/");
 console.log("Static from: ", path.resolve("../frontend/dist"));

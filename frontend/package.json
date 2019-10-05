@@ -18,7 +18,8 @@
     "preact-material-components": "^1.6.0",
     "preact-router": "^2.6.1",
     "style-loader": "^1.0.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "webpack-cli": "^3.3.9"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^5.0.4",

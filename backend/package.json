@@ -23,6 +23,7 @@
     "nedb": "^1.8.0",
     "node-exiftool": "^2.3.0",
     "node-fetch": "^2.6.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^3.6.3"
   }
 }
