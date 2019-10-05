@@ -105,7 +105,7 @@ function decidePhotoFormat(fname: string): API.PhotoType {
 
 function parseTags(tags: string, tb: tagbase): API.PhotoTagset {
     let ret: API.PhotoTagset = {};
-    if (tags == "") return ret;
+    if (!tags) return ret;
 
     tags.split(",").forEach( (itm) => {
         let spl = itm.split(":");
