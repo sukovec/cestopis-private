@@ -20,6 +20,7 @@ export class PhotosController {
     @httpGet("/dirs")
     public async getPhotoDirlist(): Promise<API.APIResponse<API.RespPhotoDirlist>> {
         let data = await this.photosrv.getPhotoDirlist();
+        data.sort((a,b) => { return (a.dirName > b.dirName) ? 1 : -1 });
         return {
                 result: API.APIResponseResult.OK,
                 data: data
