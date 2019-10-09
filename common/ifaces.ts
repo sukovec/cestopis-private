@@ -91,6 +91,17 @@ export interface RoutePoint {
 }
 
 /*********************************/
+//           WRITERS             //
+/*********************************/
+
+export interface Writer {
+    _id?: string;
+
+    fullName: string;
+    selfDescription: string;
+}
+
+/*********************************/
 //               API             //
 /*********************************/
 
@@ -111,6 +122,8 @@ export type RespPhotoList = string[];
 export type RespTagList = PhotoTag[];
 export type RespPhotoAround = PhotoAround;
 export type RespPhotoInfo = Photo;
+export type RespWriterList = Writer[];
+export type RespWriter = Writer;
 
 export type APIPossibleResponse = 
     void | 
@@ -120,7 +133,9 @@ export type APIPossibleResponse =
     RespID | 
     RespPhotoDirlist | 
     RespPhotoList |
-    RespPhotoAround;
+    RespPhotoAround | 
+    RespWriterList | 
+    RespWriter;
     
 export interface APIResponse<T extends APIPossibleResponse > {
     result: APIResponseResult;
