@@ -10,11 +10,11 @@ import "../styles/css.css"
 import RouteEditor from "./RouteEditor";
 import PhotoTagger from "./PhotoTagger";
 import Diary from "./Diary";
-import Authors from "./Authors";
+import Writers from "./Writers";
 
 export function App(props: any) {
 	return <div id="app">
-		<Button outlined onclick={() => route("/authors")}>Authors</Button>
+		<Button outlined onclick={() => route("/writers")}>Writers</Button>
 		<Button outlined onclick={() => route("/diary")}>Diary</Button>
 		<Button outlined onclick={() => route("/routes")}>Routes</Button>
 		<Button outlined onclick={() => route("/photos")}>Photos</Button>
@@ -23,7 +23,7 @@ export function App(props: any) {
 			<RouteEditor path="/routes/:action?/:id?" />
 			<PhotoTagger path="/photos/:action?/:id?/:id2?" />
 			<Diary path="/diary/:day?" />
-			<Authors path="/authors/:authorId?" />
+			<Writers path="/writers/:writerId?" />
 		</Router>
 	</div>;
 }
