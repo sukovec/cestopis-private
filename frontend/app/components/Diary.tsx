@@ -5,27 +5,23 @@ import List from "preact-material-components/List";
 
 import { IDefProps } from "../iface";
 
-import EditDay from "./Diary/EditDay";
+import EditPost from "./Diary/EditPost";
 
 export interface DiaryProps extends IDefProps {
-	day?: string;
+	action?: string;
 }
 
 export default function Diary(props: DiaryProps) {
-    let act = props.day || "daylist";
-    
-    let regdate = /[0-9]{4}-[0-9]{2}-[0-9]{2}/;
-
-    if (regdate.test(act)) { // then it is a date 
-        return <EditDay day={act} />;
-    } else if (act == "newday") {
-        return <EditDay />
-    } else {
-        return <DayList />
+    switch(props.action) {
+        case "create":
+            return <EditPost />;
+        case "":
+            return <PostList />
+        default:
+            return <EditPost postId={props.action} />;
     }
 }
 
-function DayList() {
-    return <h1>Day list</h1>
+function PostList() {
+    return <h1>PostList <a href="/diary/create">Create new post</a></h1>;
 }
-

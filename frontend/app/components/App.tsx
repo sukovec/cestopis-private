@@ -22,7 +22,7 @@ export function App(props: any) {
 		<Router history={createHashHistory()}>
 			<RouteEditor path="/routes/:action?/:id?" />
 			<PhotoTagger path="/photos/:action?/:id?/:id2?" />
-			<Diary path="/diary/:day?" />
+			<Diary path="/diary/:action?" />
 			<Writers path="/writers/:writerId?" />
 		</Router>
 	</div>;

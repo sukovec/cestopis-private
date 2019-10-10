@@ -4,17 +4,20 @@ Right now I'm travelling (or I'm not and I haven't changed this text) and I'm tr
 
 The main focus of this project are maps - displaying all the way I've made with distinguishing differents types of transport (avion, walking, buses, hitchhiking, rented car, boat). 
 
-## It is divided into two parts:
-* private - the "administration interface", divided into frontend and backend, not made to be nice-looking or even easy to use (hovewer, it should be easy to run it, just two npm install, tsc, webpack and node .)
-* public - right now, non-existent. Should display 
+Basically, this should work like website generator and the result should be (ideally) without any server-side scripting and with minimum client-side scripting. Just for displaying things that wouldn't work without scripting (maps). 
+
+## The project is divided into two parts:
+* Backend
+* Frontend
 
 ## How to run it?
 
-* There's no reason to run this right now, as it is pretty much nothing but strange example of unsing leaflet. But, here are steps to run this:
+* There's no reason to run this right now, as the only few parts works and nothing works well enough. Especially, there is still no export module, just few parts more or less working (or, to be honest, less or lesser working). But, if you would like to run this, you could do it this way:
 1. Clone the repo
 2. Execute `npm install` in both `private/backend` and `private/frontend` directories
-3. Execute `webpack` in `private/frontend` directory
-4. Execute `tsc` in `private/backend` directory
-5. Run it with `node .`
-6. Connect with browser to `http://localhost:9080/` (or whatever it shows)
+3. Execute `webpack` in `private/frontend` directory (may be needed to install webpack locally and run `npx webpack`)
+4. Execute `tsc` in `private/backend` directory (may be needed to install typescript locally and run `npx -p typescript tsc`)
+5. Run backend with `node .`
+6. Connect with browser to `http://localhost:9080/` (or whatever it shows, it's configurable using `dist/app/const/config.js`)
 7. Enjoy the nothingness and nonusefullness of this project!
+
