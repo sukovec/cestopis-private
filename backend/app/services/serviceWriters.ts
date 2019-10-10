@@ -24,7 +24,7 @@ export default class WritersService {
 
     public getWriterById(id: String): Promise<API.Writer> {
         return new Promise( (res, rej) => {
-            this.database.writers.find({_id: id}, (err: any, doc: API.Writer) => {
+            this.database.writers.findOne({_id: id}, (err: any, doc: API.Writer) => {
                 if (err) return rej(err);
                 if (!doc) return rej(new Error("The document was not found"));
                 res(doc);
@@ -40,5 +40,29 @@ export default class WritersService {
                 res(doc._id);
             });
         });
+    }
+
+    public removeWriter(writerId: string): Promise<void> {
+        return new Promise( (res, rej) => {
+            this.database.writers.remove({_id: writerId}, (err: any, num: number) => {
+                if (err) return rej(err);
+                if (num == 0) rej("Nothing have been deleted");
+                if (num > 1) throw new Error("WritersService: WTF error");
+                
+                res();
+            });
+        }); 
+    }
+
+    public updateWriter(writerId: string, replace: API.Writer): Promise<void> {
+        return new Promise( (res, rej) => {
+            this.database.writers.update({_id: writerId}, replace, {}, (err: any, num: number) => {
+                if (err) return rej(err);
+                if (num == 0) rej("Nothing have been updated");
+                if (num > 1) throw new Error("WritersService: WTF error");
+                
+                res();
+            });
+        }); 
     }
 }

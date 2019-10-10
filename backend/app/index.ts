@@ -13,10 +13,14 @@ import CFG from "./const/config";
 // support
 import "./services/db"
 import "./services/srvphotos";
+import "./services/serviceWriters";
+import "./services/serviceDiary";
 
 // controllers:
 import "./controllers/routes";
 import "./controllers/photos";
+import "./controllers/diary";
+import "./controllers/writers";
 
 // set up container
 let container = new Container();
