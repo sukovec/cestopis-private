@@ -1,2 +1,26 @@
 @import url('mobile.css') only screen and (orientation: portrait);
 @import url('laptop.css') only screen and (orientation: landscape);
+
+
+.diary_item_day {
+    background-color: #FFFFFF;
+}
+.diary_item_trick {
+    background-color: rgb(241, 255, 160);
+}
+.diary_item_budget {
+    background-color: rgb(235, 169, 255);
+}
+
+.errordisplay {
+    background-color: #FFA0A0;
+}
+
+.loadingdisplay {
+    width: 40%;
+    height: 30%;
+    position: absolute;
+    left: 30%;
+    top: 35%;
+    background-color: #C0C0C0;
+}

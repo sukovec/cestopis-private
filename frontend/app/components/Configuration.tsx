@@ -2,9 +2,6 @@ import { h } from "preact";
 
 import { IDefProps } from "../iface";
 
-import EditPost from "./Diary/EditPost";
-import PostList from "./Diary/PostList";
-
 export interface IConfigurationProps extends IDefProps {
 	action?: string;
 }

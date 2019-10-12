@@ -105,7 +105,7 @@ export interface Writer {
 //             POSTS             //
 /*********************************/
 
-export enum PostType {
+export enum PostType { // edit also styles.css to reflect all those types
     dayView = "day", 
     tiptrick = "trick", 
     budget = "budget"

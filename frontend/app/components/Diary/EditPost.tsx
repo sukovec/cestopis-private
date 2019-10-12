@@ -7,6 +7,10 @@ import FormField from "preact-material-components/FormField";
 import Radio from "preact-material-components/Radio";
 import Button from "preact-material-components/Button";
 
+// local components
+import ErrorDisplay from "../ErrorDisplay";
+import LoadingDisplay from "../LoadingDisplay";
+
 import { IDefProps } from "../../iface";
 import * as API from "../../common/ifaces";
 import { HIValue } from "../../lib/onchange";
@@ -19,6 +23,8 @@ interface EditPostState {
     error: any;
     writerList: API.Writer[];
     opResult: string;
+    loadedPost: boolean;
+    loadedWriters: boolean;
 
     selectedWriterId: string;
     selectedPostType: API.PostType;
@@ -33,6 +39,8 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
             error: null,
             opResult: null,
             writerList: null,
+            loadedPost: false,
+            loadedWriters: false,
             postDate: "",
             postContent: "",
             selectedWriterId: null,
@@ -76,25 +84,39 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
             .then(res => res.json())
             .then((res: API.APIResponse<API.RespWriterList>) => {
                 if (res.result == API.APIResponseResult.Fail) {
-                    this.setState({ error: res.resultDetail, writerList: null });
+                    this.setState({ error: res.resultDetail, loadedWriters: false, writerList: null });
                 } else {
-                    this.setState({ writerList: res.data });
+                    this.setState({ writerList: res.data, loadedWriters: true });
                 }
             })
             .catch((err) => {
-                this.setState({ error: err, writerList: null });
+                this.setState({ error: err, loadedWriters: false, writerList: null });
             });
     }
 
+    clearPost() {
+        this.setState({ 
+            error: null,
+            opResult: null,
+            loadedPost: true,
+            postDate: "",
+            postContent: "",
+            selectedWriterId: null,
+            selectedPostType: API.PostType.dayView
+     });
+    }
+
     fetchPost(id: string) {
+        this.setState({error: null, loadedPost: false});
         fetch(`/api/diary/${id}`)
             .then(res => res.json())
             .then((res: API.APIResponse<API.RespPost>) => {
                 if (res.result == API.APIResponseResult.Fail) {
                     // TODO: make it sane!
-                    this.setState({ error: res.resultDetail, writerList: null });
+                    this.setState({ loadedPost: false, error: res.resultDetail, writerList: null });
                 } else {
                     this.setState({ 
+                        loadedPost: true, 
                         postContent: res.data.text, 
                         postDate: res.data.date, 
                         selectedPostType: res.data.type,
@@ -104,7 +126,7 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
             })
             .catch((err) => {
                 // TODO: also make it more sane
-                this.setState({ error: err, writerList: null });
+                this.setState({ error: err, loadedPost: false });
             });
     }
 
@@ -115,8 +137,12 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
     }
 
     componentDidUpdate(oldProps: EditPostProps) {
-        if (this.props.postId != oldProps.postId) 
-            this.fetchPost(this.props.postId);
+        if (this.props.postId != oldProps.postId) {
+            if (!this.props.postId)
+                this.clearPost();
+            else 
+                this.fetchPost(this.props.postId);
+        }
     }
 
     //////////////////////////////
@@ -138,9 +164,12 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
     }
 
     render() {
-        const { error, writerList, postDate, postContent } = this.state;
+        const { loadedPost, loadedWriters, error, writerList, postDate, postContent } = this.state;
 
-        if (error || !writerList) return <h1>Error or not loaded, TODO: write this part better</h1>;
+        if (error) return <ErrorDisplay source="EditPost" title="An error" error={error}>Something wrong happened</ErrorDisplay>;
+        if (!loadedPost && !loadedWriters) return <LoadingDisplay>writers and posts</LoadingDisplay>;
+        if (!loadedWriters) return <LoadingDisplay>writers</LoadingDisplay>;
+        if (!loadedPost) return <LoadingDisplay>post</LoadingDisplay>;
 
         console.log(this.state);
 

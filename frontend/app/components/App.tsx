@@ -26,7 +26,7 @@ export function App(props: any) {
 			<PhotoTagger path="/photos/:action?/:id?/:id2?" />
 			<Diary path="/diary/:action?" />
 			<Writers path="/writers/:writerId?" />
-			<Configuration path="/configuration" />
+			<Configuration path="/config" />
 		</Router>
 	</div>;
 }
