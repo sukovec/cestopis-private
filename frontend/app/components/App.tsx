@@ -11,6 +11,7 @@ import RouteEditor from "./RouteEditor";
 import PhotoTagger from "./PhotoTagger";
 import Diary from "./Diary";
 import Writers from "./Writers";
+import Configuration from "./Configuration";
 
 export function App(props: any) {
 	return <div id="app">
@@ -18,12 +19,14 @@ export function App(props: any) {
 		<Button outlined onclick={() => route("/diary")}>Diary</Button>
 		<Button outlined onclick={() => route("/routes")}>Routes</Button>
 		<Button outlined onclick={() => route("/photos")}>Photos</Button>
+		<Button outlined onclick={() => route("/config")}>Configuration</Button>
 		<hr />	
 		<Router history={createHashHistory()}>
 			<RouteEditor path="/routes/:action?/:id?" />
 			<PhotoTagger path="/photos/:action?/:id?/:id2?" />
 			<Diary path="/diary/:action?" />
 			<Writers path="/writers/:writerId?" />
+			<Configuration path="/configuration" />
 		</Router>
 	</div>;
 }

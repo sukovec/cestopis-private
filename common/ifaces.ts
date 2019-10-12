@@ -149,6 +149,8 @@ export type RespPhotoAround = PhotoAround;
 export type RespPhotoInfo = Photo;
 export type RespWriterList = Writer[];
 export type RespWriter = Writer;
+export type RespPost =  Post;
+export type RespPostList = Post[];
 
 export type APIPossibleResponse = 
     void | 
@@ -160,10 +162,13 @@ export type APIPossibleResponse =
     RespPhotoList |
     RespPhotoAround | 
     RespWriterList | 
-    RespWriter;
+    RespWriter | 
+    RespPost | 
+    RespPostList;
     
+export type APIResultDetail = any; // alias error detail would be better
 export interface APIResponse<T extends APIPossibleResponse > {
     result: APIResponseResult;
-    resultDetail?: string;
+    resultDetail?: APIResultDetail;
     data: T;
 }
