@@ -21,6 +21,7 @@ import "./controllers/routes";
 import "./controllers/photos";
 import "./controllers/diary";
 import "./controllers/writers";
+import "./controllers/testing";
 
 // set up container
 let container = new Container();

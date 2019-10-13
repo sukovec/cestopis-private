@@ -22,6 +22,18 @@ export default class DiaryService {
         });
     }
 
+    public updatePost(postId: string, replace: API.Post) {
+        return new Promise( (res, rej) => {
+            this.database.diary.update({_id: postId}, replace, {}, (err: any, num: number) => {
+                if (err) return rej(err);
+                if (num == 0) rej("Nothing have been updated");
+                if (num > 1) throw new Error("WritersService: WTF error");
+                
+                res();
+            });
+        }); 
+    }
+
     public getPostById(id: string): Promise<API.Post> {
         return new Promise( (res, rej) => {
             this.database.diary.findOne({_id: id}, (err: any, doc: API.Post) => {

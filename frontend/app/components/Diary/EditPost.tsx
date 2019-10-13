@@ -53,6 +53,12 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
     uploadPost() {
         let method = "POST";
         let URL = `/api/diary`;
+
+        if (this.props.postId) {
+            URL = URL + `/${this.props.postId}`;
+            method = "PATCH";
+        }
+
         let body: API.Post = {
             date: this.state.postDate,
             text: this.state.postContent,
@@ -71,7 +77,11 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
                 if (res.result == API.APIResponseResult.Fail) {
                     this.setState({ error: res.resultDetail, opResult: "Failed to save the post" });
                 } else {
-                    route(`/diary/${res.data}`);
+                    if (this.props.postId) {
+                        alert("Updated");
+                    } else {
+                        route(`/diary/${res.data}`);
+                    }
                 }
             })
             .catch((err) => {

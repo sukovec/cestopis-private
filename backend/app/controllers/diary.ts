@@ -1,4 +1,4 @@
-import { controller, httpGet, response, requestBody, httpPost, httpDelete, requestParam } from 'inversify-express-utils';
+import { controller, httpGet, httpPatch, requestBody, httpPost, httpDelete, requestParam } from 'inversify-express-utils';
 import { inject } from "inversify";
 
 import TYPES from "../const/types";
@@ -65,4 +65,20 @@ export class DiaryController {
             };
         });
     };
+
+    @httpPatch("/:postId")
+    public updatePost(@requestBody() body: API.Post, @requestParam("postId") postId: string): Promise<API.APIResponse<void>> {
+        return this.drsr.updatePost(postId, body).then( (ret) => {
+            return {
+                result: API.APIResponseResult.OK,
+                data: null
+            }
+        }).catch( (err) => {
+            return {
+                result: API.APIResponseResult.Fail,
+                resultDetail: err,
+                data: null
+            }
+        });
+    }
 }

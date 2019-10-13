@@ -1,7 +1,10 @@
 import { h, Component } from "preact";
+import { route } from "preact-router";
 
 // components
 import List from "preact-material-components/List";
+import Button from "preact-material-components/Button";
+import Dialog from "preact-material-components/Dialog";
 
 // local components
 import ErrorDisplay from "../ErrorDisplay";
@@ -18,7 +21,8 @@ interface IPostListState {
     writers: { [id: string]: API.Writer },
     loadedPosts: boolean;
     loadedWriters: boolean;
-    error: string
+    error: string,
+    postToDelete: API.Post
 }
 
 export default class PostList extends Component<PostListProps, IPostListState> {
@@ -30,8 +34,20 @@ export default class PostList extends Component<PostListProps, IPostListState> {
             postlist: null,
             error: null,
             loadedPosts: false,
-            loadedWriters: false
+            loadedWriters: false,
+            postToDelete: null
         };
+
+        this.deletePostStep2 = this.deletePostStep2.bind(this);
+    }
+
+
+    deletePost(post: API.Post) { // being bound when rendering
+        this.setState({ postToDelete: post });
+    }
+
+    deletePostStep2() {
+        this.setState({ postToDelete: null});
     }
 
     fetchWriters() {
@@ -80,28 +96,48 @@ export default class PostList extends Component<PostListProps, IPostListState> {
             fullName: `Unknown writer id '${itm.writer}'`
         } as API.Writer;
 
-        return <a href={`/diary/${itm._id}`}><List.Item class={`diary_item_${itm.type}`}>
+        let link = `/diary/${itm._id}`;
+        let rmfunc = this.deletePost.bind(this, itm);
+        return <List.Item class={`diary_item_${itm.type}`} onClick={() => { route(link) }}>
+            <List.ItemGraphic>{itm.type}</List.ItemGraphic>
             <List.TextContainer>
                 <List.PrimaryText>{itm.date}: {itm.text.substr(0, 120)}</List.PrimaryText>
                 <List.SecondaryText>{wrt.fullName}</List.SecondaryText>
             </List.TextContainer>
             <List.ItemMeta>
-                {itm.type}
+                <Button onClick={rmfunc}>Delete</Button>
             </List.ItemMeta>
-        </List.Item></a>;
+        </List.Item>;
     }
 
     render() {
-        const { loadedPosts, loadedWriters, error, postlist } = this.state;
+        const { loadedPosts, loadedWriters, error, postlist, postToDelete } = this.state;
 
         if (error) return <ErrorDisplay source="PostList" title="An error" error={error}>Something wrong happened</ErrorDisplay>;
         if (!loadedPosts && !loadedWriters) return <LoadingDisplay>writers and posts</LoadingDisplay>;
         if (!loadedWriters) return <LoadingDisplay>writers</LoadingDisplay>;
         if (!loadedPosts) return <LoadingDisplay>post</LoadingDisplay>;
 
-        return <List two-line={true}>
-            <List.Item><a href="/diary/create">Create new item</a></List.Item>
-            {postlist.map(itm => this.renderPost(itm))}
-        </List>;
+        let delDiag = undefined;
+        if (postToDelete) {
+            delDiag = <Dialog onAccept={this.deletePostStep2}>
+                <Dialog.Header>Really delete?</Dialog.Header>
+                <Dialog.Body>
+                    Do you really want to delete post '{postToDelete._id}' <br />
+                </Dialog.Body>
+                <Dialog.Footer>
+                    <Dialog.FooterButton accept={true}>Delete!</Dialog.FooterButton>
+                    <Dialog.FooterButton cancel={true}>Delete!</Dialog.FooterButton>
+                </Dialog.Footer>
+            </Dialog>;
+        }
+
+        return <div>
+            {delDiag}
+            <List two-line={true}>
+                <List.Item><a href="/diary/create">Create new item</a></List.Item>
+                {postlist.map(itm => this.renderPost(itm))}
+            </List>
+        </div>;
     }
 }

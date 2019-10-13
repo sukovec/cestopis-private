@@ -10,6 +10,7 @@ export default function Configuration(props: ILoadingDisplayProps) {
     const { children } = props;
     
     return <div class="loadingdisplay">
-            <h1>Loading {children}</h1>
+            <h1>Loading</h1>
+            {children}
         </div>;
 }
