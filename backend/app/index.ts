@@ -5,7 +5,7 @@ import * as bodyParser from 'body-parser';
 import * as path  from "path";
 
 import { Container } from "inversify";
-import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
+import { InversifyExpressServer } from 'inversify-express-utils';
 import { buildProviderModule } from "inversify-binding-decorators";
 
 import CFG from "./const/config";
@@ -21,7 +21,6 @@ import "./controllers/routes";
 import "./controllers/photos";
 import "./controllers/diary";
 import "./controllers/writers";
-import "./controllers/testing";
 
 // set up container
 let container = new Container();
