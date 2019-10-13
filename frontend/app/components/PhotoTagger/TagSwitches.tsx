@@ -10,43 +10,25 @@ import TagSwitch from "./TagSwitch";
 
 interface TagswitchesProps extends IDefProps {
     setTags: API.PhotoTagset,
+    tagList: API.PhotoTag[];
+
     onTagAdd?: (tag: API.PhotoTag, subtag: string) => void,
     onTagRemove?: (tag: API.PhotoTag) => void
 }
 
-interface TagswitchesStat {
-    tagList: API.PhotoTag[];
-    error: string
-}
+interface TagswitchesStat {}
 
 export default class TagSwitches extends Component<TagswitchesProps, TagswitchesStat> {
     constructor(props: TagswitchesProps) {
         super(props)
-
-        this.state = {
-            tagList: null,
-            error: null
-        };
+        this.state = {        };
     }
 
     hookKeys(tags: API.PhotoTag[]) {
-
+        // call this on received props or so
     }
 
     componentDidMount() {
-        //this.tagmap = {};
-        fetch(`/api/photos/tags`, { cache: "no-cache"})
-        .then(res => res.json())
-        .then( (res: API.APIResponse<API.RespTagList>) => {
-            if (res.result == API.APIResponseResult.Fail) {
-                this.setState({tagList: null, error: res.resultDetail });
-            } else {
-                this.setState({tagList: res.data, error: null })
-                this.hookKeys(res.data);
-            }
-        }).catch( (ex: any) => {
-            this.setState( {tagList: null, error: ex.toString()});
-        })
     }
 
     tagChanged(tag: API.PhotoTag, newState: boolean, subtag?: string) {
@@ -72,16 +54,7 @@ export default class TagSwitches extends Component<TagswitchesProps, Tagswitches
     /*          RENDER          */
     //////////////////////////////
     render() {
-        const { tagList, error } = this.state;
-        const { setTags } = this.props;
-
-        if(tagList == null && error == null) {
-            return <h1>Loading tag list</h1>
-        } else if (tagList == null && error != null) {
-            return <h1>Error: {error}</h1>
-        } else if (error != null && tagList != null) {
-            return <h1>Tagger WTF state</h1>;
-        }
+        const { tagList, setTags } = this.props;
 
         return <div>{tagList.map((item => {
             if (item.hidden) return null; // TODO: make a possibility to see hidden tags

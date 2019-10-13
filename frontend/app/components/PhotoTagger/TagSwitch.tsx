@@ -1,8 +1,4 @@
 import { h, render, Component } from "preact";
-import { route } from "preact-router";
-import { LeafletMouseEvent } from "leaflet";
-
-// components
 import { IDefProps } from "../../iface";
 import * as API from "../../common/ifaces";
 
