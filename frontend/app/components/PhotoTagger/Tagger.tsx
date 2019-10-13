@@ -84,20 +84,13 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
             comment: this.state.comment,
             tags: this.state.tags
         };
-        fetch(`/api/photos/photo/${this.props.photoId}/info`, {
-            method: "POST",
-            cache: "no-cache",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(body)
-        })
-            .then(res => res.json())
-            .then((res: API.APIResponse<void>) => {
-                if (res.result == API.APIResponseResult.OK) {
-                    if (this.state.nextId)
-                        route(`/photos/tag/${this.state.nextId}`);
-                    else
-                        route(`/photos/dir/${this.state.dir}`);
-                }
+
+        this.download("updating photo metadata", `/api/photos/photo/${this.props.photoId}/info`, "POST", body)
+            .then((res: void) => {
+                if (this.state.nextId)
+                    route(`/photos/tag/${this.state.nextId}`);
+                else
+                    route(`/photos/dir/${this.state.dir}`);
             });
     }
 
@@ -106,7 +99,6 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
     }
 
     addTag(tag: API.PhotoTag, subtag: string): void {
-        //        console.log(`Tagger::addTag(${tag._id}/${tag.tagName}, ${subtag})`);
         this.setState((oldstate) => {
             let newtags: API.PhotoTagset = { ...oldstate.tags };
             newtags[tag._id] = { subtag: subtag };
@@ -115,8 +107,6 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
     }
 
     removeTag(tag: API.PhotoTag): void {
-        //        console.log(`Tagger::removeTag(${tag._id}/${tag.tagName})`);
-
         this.setState((oldstate) => {
             let newtags: API.PhotoTagset = { ...oldstate.tags };
             delete newtags[tag._id];
