@@ -16,7 +16,16 @@ export interface RunningDownload {
 	url: string;
 }
 
+export interface DisplayMessage {
+	title: string;
+	text: string;
+	onAccept?: () => void;
+	onCancel?: () => void;
+	ref?: any;
+}
+
 export interface IDefState { // just for BaseComponent-derived components
-	__downloads: Set<RunningDownload>;
-	__errors: Set<DisplayedError>;
+	__downloads?: Set<RunningDownload>;
+	__errors?: Set<DisplayedError>;
+	__message?: DisplayMessage;
 }

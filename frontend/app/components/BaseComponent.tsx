@@ -1,7 +1,7 @@
 import * as X from "../iface";
 import * as API from "../common/ifaces";
 import LoadingDisplay from "./LoadingDisplay";
-
+import Dialog from "preact-material-components/Dialog";
 import { h, Component, VNode } from "preact";
 
 // let's call this über-prasárna and try to look that it's not that bad
@@ -33,6 +33,17 @@ export default abstract class BaseComponent<P extends X.IDefProps, S extends X.I
         this.setState((oldst) => {
             oldst.__downloads.delete(down);
             return {};
+        });
+    }
+
+    protected displayMessage(title: string, text: string, onAccept?: () => void, onCancel?: () => void): void {
+        this.setState({
+            __message: {
+                title: title,
+                text: text,
+                onAccept: onAccept, 
+                onCancel: onCancel
+            }
         });
     }
 
@@ -109,6 +120,34 @@ export default abstract class BaseComponent<P extends X.IDefProps, S extends X.I
         return <li>Error: {err.error} {retry}</li>;
     }
 
+    renderMessage(msg: X.DisplayMessage) {
+        let cancbut = msg.onCancel ? <Dialog.FooterButton cancel={true}>Cancel</Dialog.FooterButton> : null;
+        let ref = (cmp: any) => {
+            msg.ref = cmp; 
+            cmp.control.show(); 
+        };
+        let acpt = () => {
+            msg.ref.hide();
+            if (msg.onAccept) msg.onAccept();
+        };
+        let cncl = () => {
+            msg.ref.hide();
+            if (msg.onCancel) msg.onCancel();
+        };
+
+        return <span>
+            <Dialog onAccept={acpt} onCancel={cncl} ref={ref}>
+                <Dialog.Header>{msg.title}</Dialog.Header>
+                <Dialog.Body>{msg.text}</Dialog.Body>
+                <Dialog.Footer>
+                    <Dialog.FooterButton accept={true}>OK</Dialog.FooterButton>
+                    {cancbut}
+                </Dialog.Footer>
+            </Dialog>
+            {this.r()} 
+            </span>
+    }
+
     render(): VNode<any> | null {
         if (this.state.__downloads && this.state.__downloads.size > 0) {
             return <LoadingDisplay>
@@ -126,6 +165,9 @@ export default abstract class BaseComponent<P extends X.IDefProps, S extends X.I
                 </ul>
             </div>;
         }
+
+        if (this.state.__message) 
+            return this.renderMessage(this.state.__message);
         
         return this.r();
     }

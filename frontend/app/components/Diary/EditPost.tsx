@@ -1,5 +1,7 @@
-import { h, Component } from "preact";
+import { h } from "preact";
 import { route } from "preact-router";
+
+import BaseComponent from "../BaseComponent";
 
 // components
 import TextField from "preact-material-components/TextField";
@@ -7,11 +9,7 @@ import FormField from "preact-material-components/FormField";
 import Radio from "preact-material-components/Radio";
 import Button from "preact-material-components/Button";
 
-// local components
-import ErrorDisplay from "../ErrorDisplay";
-import LoadingDisplay from "../LoadingDisplay";
-
-import { IDefProps } from "../../iface";
+import { IDefProps, IDefState } from "../../iface";
 import * as API from "../../common/ifaces";
 import { HIValue } from "../../lib/onchange";
 
@@ -19,12 +17,8 @@ interface EditPostProps extends IDefProps {
     postId?: string;
 }
 
-interface EditPostState {
-    error: any;
+interface EditPostState extends IDefState {
     writerList: API.Writer[];
-    opResult: string;
-    loadedPost: boolean;
-    loadedWriters: boolean;
 
     selectedWriterId: string;
     selectedPostType: API.PostType;
@@ -32,15 +26,11 @@ interface EditPostState {
     postContent: string;
 }
 
-export default class EditPost extends Component<EditPostProps, EditPostState> {
-    constructor() {
-        super();
+export default class EditPost extends BaseComponent<EditPostProps, EditPostState> {
+    constructor(props: EditPostProps, ctx: any) {
+        super(props, ctx);
         this.state = {
-            error: null,
-            opResult: null,
             writerList: null,
-            loadedPost: false,
-            loadedWriters: false,
             postDate: "",
             postContent: "",
             selectedWriterId: null,
@@ -66,78 +56,41 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
             writer: this.state.selectedWriterId
         };
 
-        fetch(URL, {
-            method: method,
-            cache: "no-cache",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(body)
-        })
-            .then(res => res.json())
-            .then((res: API.APIResponse<API.RespID>) => {
-                if (res.result == API.APIResponseResult.Fail) {
-                    this.setState({ error: res.resultDetail, opResult: "Failed to save the post" });
-                } else {
-                    if (this.props.postId) {
-                        alert("Updated");
-                    } else {
-                        route(`/diary/${res.data}`);
-                    }
-                }
-            })
-            .catch((err) => {
-                this.setState({ error: err, opResult: "Failed to save the post" });
-            });
+        this.download("uploading post", URL, method, body)
+        .then( (res: API.RespID) => {
+            if (this.props.postId) {
+                this.displayMessage("Success", "The post was successfully updated");
+            } else {
+                route(`/diary/${res}`);
+            }
+        });
     }
 
     fetchWriters() {
-        fetch(`/api/writers/`)
-            .then(res => res.json())
-            .then((res: API.APIResponse<API.RespWriterList>) => {
-                if (res.result == API.APIResponseResult.Fail) {
-                    this.setState({ error: res.resultDetail, loadedWriters: false, writerList: null });
-                } else {
-                    this.setState({ writerList: res.data, loadedWriters: true });
-                }
-            })
-            .catch((err) => {
-                this.setState({ error: err, loadedWriters: false, writerList: null });
+        this.download("writer list", "/api/writers").then((res: API.RespWriterList) => {
+            this.setState({ writerList: res });
+        });
+    }
+
+    fetchPost(id: string) {
+        this.download("post data", `/api/diary/${id}`)
+            .then((res: API.RespPost) => {
+                this.setState({
+                    postContent: res.text,
+                    postDate: res.date,
+                    selectedPostType: res.type,
+                    selectedWriterId: res.writer
+                });
             });
     }
 
     clearPost() {
-        this.setState({ 
-            error: null,
-            opResult: null,
-            loadedPost: true,
+        this.setState({
             postDate: "",
             postContent: "",
             selectedWriterId: null,
             selectedPostType: API.PostType.dayView
-     });
-    }
-
-    fetchPost(id: string) {
-        this.setState({error: null, loadedPost: false});
-        fetch(`/api/diary/${id}`)
-            .then(res => res.json())
-            .then((res: API.APIResponse<API.RespPost>) => {
-                if (res.result == API.APIResponseResult.Fail) {
-                    // TODO: make it sane!
-                    this.setState({ loadedPost: false, error: res.resultDetail, writerList: null });
-                } else {
-                    this.setState({ 
-                        loadedPost: true, 
-                        postContent: res.data.text, 
-                        postDate: res.data.date, 
-                        selectedPostType: res.data.type,
-                        selectedWriterId: res.data.writer
-                 });
-                }
-            })
-            .catch((err) => {
-                // TODO: also make it more sane
-                this.setState({ error: err, loadedPost: false });
-            });
+        });
     }
 
     componentDidMount() {
@@ -150,7 +103,7 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
         if (this.props.postId != oldProps.postId) {
             if (!this.props.postId)
                 this.clearPost();
-            else 
+            else
                 this.fetchPost(this.props.postId);
         }
     }
@@ -173,16 +126,9 @@ export default class EditPost extends Component<EditPostProps, EditPostState> {
         </fieldset>;
     }
 
-    render() {
-        const { loadedPost, loadedWriters, error, writerList, postDate, postContent } = this.state;
-
-        if (error) return <ErrorDisplay source="EditPost" title="An error" error={error}>Something wrong happened</ErrorDisplay>;
-        if (!loadedPost && !loadedWriters) return <LoadingDisplay>writers and posts</LoadingDisplay>;
-        if (!loadedWriters) return <LoadingDisplay>writers</LoadingDisplay>;
-        if (!loadedPost) return <LoadingDisplay>post</LoadingDisplay>;
-
-        console.log(this.state);
-
+    r() {
+        const { writerList, postDate, postContent } = this.state;
+        if (!writerList) return <h1>Load first</h1>;
         return <div>
             {this.renderPostType()}
             {this.renderWriterSelect(writerList)}
