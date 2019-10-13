@@ -4,19 +4,18 @@ import { route } from "preact-router";
 // components
 import List from "preact-material-components/List";
 import Button from "preact-material-components/Button";
-import Dialog from "preact-material-components/Dialog";
 
-// local components
-import ErrorDisplay from "../ErrorDisplay";
-import LoadingDisplay from "../LoadingDisplay";
+// local compnents
+import BaseComponent from "../BaseComponent";
+import Dialog from "../Dialog";
 
-import { IDefProps } from "../../iface";
+import { IDefProps, IDefState } from "../../iface";
 import * as API from "../../common/ifaces";
 
 interface PostListProps extends IDefProps {
 }
 
-interface IPostListState {
+interface IPostListState extends IDefState {
     postlist: API.Post[],
     writers: { [id: string]: API.Writer },
     loadedPosts: boolean;
@@ -25,10 +24,9 @@ interface IPostListState {
     postToDelete: API.Post
 }
 
-export default class PostList extends Component<PostListProps, IPostListState> {
-
-    constructor() {
-        super();
+export default class PostList extends BaseComponent<PostListProps, IPostListState> {
+    constructor(p: PostListProps, ctx: any) {
+        super(p, ctx);
         this.state = {
             writers: null,
             postlist: null,
@@ -47,43 +45,34 @@ export default class PostList extends Component<PostListProps, IPostListState> {
     }
 
     deletePostStep2() {
-        this.setState({ postToDelete: null});
+        this.download("deleting post", `/api/diary/${this.state.postToDelete._id}`, "DELETE")
+        .then( (res: void) => {
+            this.setState({ postToDelete: null });
+            this.fetchPosts();
+        });
     }
 
     fetchWriters() {
-        fetch("/api/writers")
-            .then(res => res.json())
-            .then((res: API.APIResponse<API.RespWriterList>) => {
-                if (res.result == API.APIResponseResult.Fail) {
-                    this.setState({ postlist: null, error: res.resultDetail, loadedWriters: false });
-                } else {
-                    let hmap = res.data.reduce((prev, cur) => {
-                        prev[cur._id] = cur;
-                        return prev;
-                    }, {} as { [id: string]: API.Writer });
-                    this.setState({ writers: hmap, error: null, loadedWriters: true })
-                }
-            })
-            .catch((err) => {
-                this.setState({ error: err, loadedWriters: false })
+        this.download("writers", "/api/writers")
+            .then((res: API.RespWriterList) => {
+                let hmap = res.reduce((prev, cur) => {
+                    prev[cur._id] = cur;
+                    return prev;
+                }, {} as { [id: string]: API.Writer });
+                this.setState({ writers: hmap });
+            });
+    }
+
+    fetchPosts() {
+        this.download("posts", "/api/diary")
+            .then((res: API.RespPostList) => {
+                this.setState({ postlist: res })
             });
     }
 
     componentDidMount() {
         this.fetchWriters();
-
-        fetch("/api/diary")
-            .then(res => res.json())
-            .then((res: API.APIResponse<API.RespPostList>) => {
-                if (res.result == API.APIResponseResult.Fail) {
-                    this.setState({ postlist: null, error: res.resultDetail, loadedPosts: false });
-                } else {
-                    this.setState({ postlist: res.data, error: null, loadedPosts: true })
-                }
-            })
-            .catch((err) => {
-                this.setState({ error: err, loadedPosts: false })
-            });
+        this.fetchPosts();
     }
 
     //////////////////////////////
@@ -105,29 +94,25 @@ export default class PostList extends Component<PostListProps, IPostListState> {
                 <List.SecondaryText>{wrt.fullName}</List.SecondaryText>
             </List.TextContainer>
             <List.ItemMeta>
-                <Button onClick={rmfunc}>Delete</Button>
+                <Button onClick={(evt: any) => {rmfunc(); evt.stopPropagation(); }}>Delete</Button>
             </List.ItemMeta>
         </List.Item>;
     }
 
-    render() {
-        const { loadedPosts, loadedWriters, error, postlist, postToDelete } = this.state;
-
-        if (error) return <ErrorDisplay source="PostList" title="An error" error={error}>Something wrong happened</ErrorDisplay>;
-        if (!loadedPosts && !loadedWriters) return <LoadingDisplay>writers and posts</LoadingDisplay>;
-        if (!loadedWriters) return <LoadingDisplay>writers</LoadingDisplay>;
-        if (!loadedPosts) return <LoadingDisplay>post</LoadingDisplay>;
-
+    r() {
+        const { postlist, postToDelete, writers} = this.state;
+        if (!postlist || !writers) return <h1>Not loaded</h1>;
+        
         let delDiag = undefined;
         if (postToDelete) {
-            delDiag = <Dialog onAccept={this.deletePostStep2}>
+            delDiag = <Dialog visible={true}>
                 <Dialog.Header>Really delete?</Dialog.Header>
                 <Dialog.Body>
                     Do you really want to delete post '{postToDelete._id}' <br />
                 </Dialog.Body>
                 <Dialog.Footer>
-                    <Dialog.FooterButton accept={true}>Delete!</Dialog.FooterButton>
-                    <Dialog.FooterButton cancel={true}>Delete!</Dialog.FooterButton>
+                    <Button onClick={this.deletePostStep2}>Delete!</Button>
+                    <Button onClick={() => {this.setState({postToDelete:null})}}>No</Button>
                 </Dialog.Footer>
             </Dialog>;
         }

@@ -62,6 +62,7 @@ export default class EditPost extends BaseComponent<EditPostProps, EditPostState
                 this.displayMessage("Success", "The post was successfully updated");
             } else {
                 route(`/diary/${res}`);
+                this.displayMessage("Success", "The post was successfully created");
             }
         });
     }

@@ -68,7 +68,23 @@ export class DiaryController {
 
     @httpPatch("/:postId")
     public updatePost(@requestBody() body: API.Post, @requestParam("postId") postId: string): Promise<API.APIResponse<void>> {
-        return this.drsr.updatePost(postId, body).then( (ret) => {
+        return this.drsr.updatePost(postId, body).then( () => {
+            return {
+                result: API.APIResponseResult.OK,
+                data: null
+            }
+        }).catch( (err) => {
+            return {
+                result: API.APIResponseResult.Fail,
+                resultDetail: err,
+                data: null
+            }
+        });
+    }
+
+    @httpDelete("/:postId")
+    public deletePost(@requestParam("postId") postId: string): Promise<API.APIResponse<void>> {
+        return this.drsr.deletePost(postId).then( (ret) => {
             return {
                 result: API.APIResponseResult.OK,
                 data: null

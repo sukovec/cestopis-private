@@ -1,7 +1,7 @@
 import * as X from "../iface";
 import * as API from "../common/ifaces";
-import LoadingDisplay from "./LoadingDisplay";
-import Dialog from "preact-material-components/Dialog";
+import Dialog from "./Dialog";
+import Button from "preact-material-components/Button";
 import { h, Component, VNode } from "preact";
 
 // let's call this über-prasárna and try to look that it's not that bad
@@ -121,26 +121,20 @@ export default abstract class BaseComponent<P extends X.IDefProps, S extends X.I
     }
 
     renderMessage(msg: X.DisplayMessage) {
-        let cancbut = msg.onCancel ? <Dialog.FooterButton cancel={true}>Cancel</Dialog.FooterButton> : null;
-        let ref = (cmp: any) => {
-            msg.ref = cmp; 
-            cmp.control.show(); 
-        };
+        let cancbut = msg.onCancel ? <Button cancel={true}>Cancel</Button> : null;
+
         let acpt = () => {
-            msg.ref.hide();
-            if (msg.onAccept) msg.onAccept();
-        };
-        let cncl = () => {
-            msg.ref.hide();
-            if (msg.onCancel) msg.onCancel();
+            this.setState({__message: null});
+            if (msg.onAccept)
+                msg.onAccept();
         };
 
         return <span>
-            <Dialog onAccept={acpt} onCancel={cncl} ref={ref}>
+            <Dialog visible={true}>
                 <Dialog.Header>{msg.title}</Dialog.Header>
                 <Dialog.Body>{msg.text}</Dialog.Body>
                 <Dialog.Footer>
-                    <Dialog.FooterButton accept={true}>OK</Dialog.FooterButton>
+                    <Button onClick={acpt}>OK</Button>
                     {cancbut}
                 </Dialog.Footer>
             </Dialog>
@@ -150,11 +144,14 @@ export default abstract class BaseComponent<P extends X.IDefProps, S extends X.I
 
     render(): VNode<any> | null {
         if (this.state.__downloads && this.state.__downloads.size > 0) {
-            return <LoadingDisplay>
+            return <Dialog visible={true}>
+                <Dialog.Header>Loading...</Dialog.Header>
+                <Dialog.Body>
                     <ul>
                         {Array.from(this.state.__downloads).map(itm => <li>{itm.display}</li>)}
                     </ul>
-                </LoadingDisplay>
+                </Dialog.Body>
+                </Dialog >
         }
 
         if (this.state.__errors && this.state.__errors.size > 0) {

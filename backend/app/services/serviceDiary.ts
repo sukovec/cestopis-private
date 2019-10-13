@@ -14,7 +14,7 @@ export default class DiaryService {
 
     public getAllPosts(): Promise<API.Post[]> {
         return new Promise( (res, rej) => {
-            this.database.diary.find({}, (err: any, doc: API.Post[]) => {
+            this.database.diary.find({}).sort({date: 1}).exec((err: any, doc: API.Post[]) => {
                 if (err) return rej(err);
 
                 res(doc);
@@ -22,7 +22,7 @@ export default class DiaryService {
         });
     }
 
-    public updatePost(postId: string, replace: API.Post) {
+    public updatePost(postId: string, replace: API.Post): Promise<void> {
         return new Promise( (res, rej) => {
             this.database.diary.update({_id: postId}, replace, {}, (err: any, num: number) => {
                 if (err) return rej(err);
@@ -33,6 +33,19 @@ export default class DiaryService {
             });
         }); 
     }
+
+    public deletePost(postId: string): Promise<void> {
+        return new Promise( (res, rej) => {
+            this.database.diary.remove({_id: postId},{}, (err: any, num: number) => {
+                if (err) return rej(err);
+                if (num == 0) rej("Nothing have been deleted");
+                if (num > 1) throw new Error("WritersService: WTF error");
+                
+                res();
+            });
+        }); 
+    }
+
 
     public getPostById(id: string): Promise<API.Post> {
         return new Promise( (res, rej) => {

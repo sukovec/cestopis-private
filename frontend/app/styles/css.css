@@ -1,6 +1,40 @@
 @import url('mobile.css') only screen and (orientation: portrait);
 @import url('laptop.css') only screen and (orientation: landscape);
 
+.dialog {
+    width: 40%;
+    height: 30%;
+    position: absolute;
+    left: 30%;
+    top: 35%;
+    background-color: rgb(185, 211, 182);
+    border: 1px solid #000000;
+    z-index: 5;
+}
+
+.dialog .header {
+    margin: 0px;
+    padding: 2px;
+    border-bottom: 1px solid #404040;
+    background-color: rgb(145, 189, 141);
+}
+
+.dialog .footer {
+    margin: 0px;
+    padding: 2px;
+    border-top: 1px solid #000000;
+    bottom: 0px;
+    position: absolute;
+    width: 100%;
+}
+
+.dialog .footer button + button {
+    float: right;
+}
+
+.dialog .footer button:only-child {
+    text-align: center;
+}
 
 .diary_item_day {
     background-color: #FFFFFF;
