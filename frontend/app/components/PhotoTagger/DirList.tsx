@@ -1,67 +1,57 @@
 import { h, render, Component } from "preact";
 import { route } from "preact-router";
-import { LeafletMouseEvent } from "leaflet";
 
 // components
-import { IDefProps } from "../../iface";
+import { IDefProps, IDefState } from "../../iface";
 import * as API from "../../common/ifaces";
+
+// components
+import BaseComponent from "../BaseComponent";
 
 interface DirListProps extends IDefProps {
 }
 
-interface DirListStats {
+interface DirListStats extends IDefState {
     dirlist: API.RespPhotoDirlist,
-    error: string
 }
 
-export default class DirList extends Component<DirListProps, DirListStats> {
+export default class DirList extends BaseComponent<DirListProps, DirListStats> {
 
-    constructor() {
-        super();
+    constructor(p: DirListProps, ctx: any) {
+        super(p, ctx);
         this.state = {
             dirlist: null,
-            error: null
         };
     }
 
+    fetchDirlist() {
+        this.download("directory list", "/api/photos/dirs")
+            .then((res: API.RespPhotoDirlist) => {
+                this.setState({ dirlist: res })
+            });
+    }
+
     componentDidMount() {
-        fetch("/api/photos/dirs", { cache: "no-cache"})
-        .then(res => res.json())
-        .then( (res: API.APIResponse<API.RespPhotoDirlist>) => {
-            if (res.result == API.APIResponseResult.Fail) {
-                this.setState({dirlist: null, error: res.resultDetail });
-            } else {
-                this.setState({dirlist: res.data, error: null })
-            }
-        });
+        this.fetchDirlist();
     }
 
     //////////////////////////////
     /*          RENDER          */
     //////////////////////////////
-    render() {
+    r() {
         let dirlist = this.state.dirlist;
-        let error = this.state.error;
+        if (!dirlist) return <h1>Not loaded</h1>;
 
-        if(dirlist == null && error == null) {
-            return <h1>Loading dirs ...</h1>
-        } else if (dirlist == null && error != null) {
-            return <h1>Error: {error}</h1>
-        } else if (error != null && dirlist != null) {
-            return <h1>PhotoTaggerDirlist WTF state</h1>;
-        } else {
-            return <table>
-                    <tr><th>Folder</th><th>MultiTag</th><th>Count total</th><th>Untagged</th><th>Places</th></tr>
-                {dirlist.map(itm => <tr>
-                    <td><a href={`/photos/dir/${itm.dirName}`}>{itm.dirName}</a></td>
-                    <td><a href={`/photos/multitag/${itm.dirName}`}>MULTI</a></td>
-                    <td>{itm.photos}</td>
-                    <td class={itm.untagged == 0 ? "perfect" : (itm.untagged == itm.photos ? "untouched" : "notbad")}>{itm.untagged}</td>
-                    <td>{itm.places.join(", ")}</td>
-                    </tr>)
-                }
-                </table>
-        }
-        
+        return <table>
+            <tr><th>Folder</th><th>MultiTag</th><th>Count total</th><th>Untagged</th><th>Places</th></tr>
+            {dirlist.map(itm => <tr>
+                <td><a href={`/photos/dir/${itm.dirName}`}>{itm.dirName}</a></td>
+                <td><a href={`/photos/multitag/${itm.dirName}`}>MULTI</a></td>
+                <td>{itm.photos}</td>
+                <td class={itm.untagged == 0 ? "perfect" : (itm.untagged == itm.photos ? "untouched" : "notbad")}>{itm.untagged}</td>
+                <td>{itm.places.join(", ")}</td>
+            </tr>)
+            }
+        </table>
     }
 }
