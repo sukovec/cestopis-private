@@ -78,7 +78,8 @@ export default abstract class BaseComponent<P extends X.IDefProps, S extends X.I
     protected download<A extends API.APIPossibleResponse, T extends API.APIResponse<A>>(display: string, url: string, method?: string, body?: any): Promise<A> {
         let opts: RequestInit = { 
             method: method,
-            cache: "no-cache"
+            cache: "no-cache",
+            credentials: "same-origin"
         };
 
         if (body) { 

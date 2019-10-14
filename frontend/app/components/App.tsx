@@ -7,6 +7,7 @@ import 'preact-material-components/style.css';
 
 import "../styles/css.css"
 
+import Login from "./Login";
 import RouteEditor from "./RouteEditor";
 import PhotoTagger from "./PhotoTagger";
 import Diary from "./Diary";
@@ -22,6 +23,7 @@ export function App(props: any) {
 		<Button outlined onclick={() => route("/config")}>Configuration</Button>
 		<hr />	
 		<Router history={createHashHistory()}>
+			<Login path="/" />
 			<RouteEditor path="/routes/:action?/:id?" />
 			<PhotoTagger path="/photos/:action?/:id?/:id2?" />
 			<Diary path="/diary/:action?" />

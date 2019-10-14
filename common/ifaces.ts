@@ -90,6 +90,11 @@ export interface RoutePoint {
     extRouted: LatLng[];
 }
 
+export interface APIRequestRoute {
+    from: RoutePoint;
+    to: RoutePoint;
+}
+
 /*********************************/
 //           WRITERS             //
 /*********************************/
@@ -125,15 +130,29 @@ export interface Post {
     budget?: Budget;
 }
 
+/*********************************/
+//              AUTH             //
+/*********************************/
+
+export interface User {
+    username: string;
+    pwhash: string; // password hashed by sha256
+}
+
+export interface LoginRequest {
+    user: string; // username
+    passwd: string; // sha256(challenge + sha256(password))
+}
+
+export interface LoginStatus { 
+    logged: boolean;
+    user: string;
+}
 
 /*********************************/
 //               API             //
 /*********************************/
 
-export interface APIRequestRoute {
-    from: RoutePoint;
-    to: RoutePoint;
-}
 
 export enum APIResponseResult {
     OK = "ok",
@@ -151,6 +170,8 @@ export type RespWriterList = Writer[];
 export type RespWriter = Writer;
 export type RespPost =  Post;
 export type RespPostList = Post[];
+export type RespChallenge = string;
+export type RespLoginStatus = LoginStatus;
 
 export type APIPossibleResponse = 
     void | 
@@ -164,7 +185,9 @@ export type APIPossibleResponse =
     RespWriterList | 
     RespWriter | 
     RespPost | 
-    RespPostList;
+    RespPostList | 
+    RespChallenge |
+    RespLoginStatus ;
     
 export type APIResultDetail = any; // alias error detail would be better
 export interface APIResponse<T extends APIPossibleResponse > {

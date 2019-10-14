@@ -4,5 +4,6 @@ export default {
     serverPort: 9080,
     serverListen: "0.0.0.0",
     exportThumbPath: "/var/www/vps.sukovec.cz/test-thumbs",
-    databasePath: "/home/suk/code/cestopis/data"
+    databasePath: "/home/suk/code/cestopis/data",
+    sessionSecret: "this-is-session-secret-change-it-for-production"
 };
