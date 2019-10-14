@@ -102,6 +102,7 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 			<Button outlined onclick={() => route("/config")}>Configuration</Button>
 			
 			<Button secondary onclick={this.logout}>Log out</Button>
+			<Button secondary>Change password</Button>
 
 			<hr />
 			<Router history={createHashHistory()}>
@@ -110,6 +111,7 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 				<Diary path="/diary/:action?" />
 				<Writers path="/writers/:writerId?" />
 				<Configuration path="/config" />
+				<Greeting path="/" username={this.state.username} />
 			</Router>
 		</div>;
 	}
@@ -136,4 +138,8 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 		else
 			return this.renderLogin();
 	}
+}
+
+function Greeting(props: {username: string, path?: string}) {
+	return <h1>Hello, {props.username}</h1>;
 }
