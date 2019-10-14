@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import * as express from "express";
 import * as bodyParser from 'body-parser';
-import * as path  from "path";
+import * as path from "path";
 import * as session from "express-session";
 import * as uuid from "uuid/v4";
 import * as prettyjson from "prettyjson";
@@ -13,6 +13,7 @@ import { buildProviderModule } from "inversify-binding-decorators";
 
 
 import CFG from "./const/config";
+import * as API from "./common/ifaces";
 
 // support
 import "./services/db"
@@ -30,6 +31,7 @@ import "./controllers/login";
 
 // middleware:
 import "./middleware/needlogin";
+import ErrorMW from "./middleware/errormw";
 
 // set up session store
 let sesstore = require('nedb-session-store')(session);
@@ -44,13 +46,21 @@ server.setConfig((app) => {
 	app.use(bodyParser.urlencoded({ extended: true }));
 	app.use(bodyParser.json());
 	app.use(session({
-		secret: CFG.sessionSecret, 
-		resave: false, 
+		secret: CFG.sessionSecret,
+		resave: false,
 		saveUninitialized: false,
-		store: new sesstore({filename: `${CFG.databasePath}/session.ndb` }),
+		store: new sesstore({ filename: `${CFG.databasePath}/session.ndb` }),
 		genid: (req) => { return uuid() }
 	}));
 	app.use("/", express.static(path.resolve("../frontend/dist")));
+});
+
+server.setErrorConfig((app) => {
+	app.use((req, res, next) => {
+		res.status(404);
+		res.send({ result: API.APIResponseResult.Fail, resultDetail: "!notfound", })
+	});
+	app.use(ErrorMW);
 });
 
 container.load(buildProviderModule())
