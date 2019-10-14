@@ -1,51 +1,40 @@
-import { h, Component } from "preact";
+import { h } from "preact";
 import { route } from "preact-router";
 
 import Button from "preact-material-components/Button";
 import TextField from "preact-material-components/TextField";
 
-import { IDefProps } from "../../iface";
+import BaseComponent from "../BaseComponent";
+
+import { IDefProps, IDefState } from "../../iface";
 import * as API from "../../common/ifaces";
 import { HIValue } from "../../lib/onchange";
 
-interface WriterEditProps extends IDefProps {
+interface IWriterEditProps extends IDefProps {
     writerId?: string;
 }
 
-interface WriterEditState {
-    loaded: boolean,
+interface IWriterEditState extends IDefState {
     writerName: string,
     writerInfo: string,
-    opResult: string,
-    error: string
 }
 
-export default class WriterEdit extends Component<WriterEditProps, WriterEditState> {
-    constructor() {
-        super();
+export default class WriterEdit extends BaseComponent<IWriterEditProps, IWriterEditState> {
+    constructor(p: IWriterEditProps, ctx: any) {
+        super(p, ctx);
         this.state = {
-            loaded: false,
             writerName: "",
             writerInfo: "",
-            opResult: null,
-            error: null
         };
 
         this.uploadData = this.uploadData.bind(this);
     }
 
-    fetchData(id: string) {
-        fetch(`/api/writers/${id}`, { method: "GET", cache: "no-cache" })
-        .then(res => res.json())
-        .then((res: API.APIResponse<API.RespWriter>) => {
-            if (res.result == API.APIResponseResult.Fail) {
-                this.setState({ loaded: false, error: res.resultDetail });
-            } else {
-                this.setState({ loaded: true, error: null, writerName: res.data.fullName, writerInfo: res.data.selfDescription });
-            }
-        }).catch( (err) => {
-            this.setState({loaded: false, error: err});
-        });
+    fetchWriter(id: string) {
+        this.download("writer data", `/api/writers/${id}`)
+            .then((res: API.RespWriter) => {
+                this.setState({ writerName: res.fullName, writerInfo: res.selfDescription });
+            });
     }
 
     uploadData() {
@@ -54,72 +43,53 @@ export default class WriterEdit extends Component<WriterEditProps, WriterEditSta
             selfDescription: this.state.writerInfo
         };
 
-        let URL = "/api/writers/"; 
-        if (this.props.writerId) 
+        let URL = "/api/writers/";
+        if (this.props.writerId)
             URL = URL + this.props.writerId;
 
         let method = this.props.writerId ? "PATCH" : "POST";
 
-        fetch(URL, { 
-            method: method, 
-            cache: "no-cache", 
-            headers: {"content-type": "application/json"},
-            body: JSON.stringify(body) })
-        .then(res => res.json())
-        .then((res: API.APIResponse<API.RespID>) => {
-            if (res.result == API.APIResponseResult.Fail) {
-                this.setState({ error: res.resultDetail, opResult: "Update/insert failed" });
-            } else {
-                if(this.props.writerId) { //it's editing
-                    this.setState({ opResult: "Update successfull" });
+        this.download("upload data", URL, method, body)
+            .then((res: API.RespID) => {
+                if (this.props.writerId) { //it's editing
+                    this.displayMessage("Update data", "Updating writer data was successfull");
                 } else {
-                    route(`/writers/${res.data}`);
+                    route(`/writers/${res}`);
+                    this.displayMessage("Insert data", "Creating new writer was successfull");
                 }
-            }
-        });
 
+            });
     }
 
     clearData() {
-        this.setState({loaded: true, writerName: "", writerInfo: "", error: null});
+        this.setState({ writerName: "", writerInfo: "" });
     }
 
-    componentDidUpdate(prevProps: WriterEditProps) {
+    componentDidUpdate(prevProps: IWriterEditProps) {
         if (prevProps.writerId != this.props.writerId) {
             if (!this.props.writerId)
                 this.clearData();
-            else 
-                this.fetchData(this.props.writerId);
+            else
+                this.fetchWriter(this.props.writerId);
         }
     }
 
     componentDidMount() {
-        this.componentDidUpdate({writerId: ""});
+        this.componentDidUpdate({ writerId: "" });
     }
 
     //////////////////////////////
     /*          RENDER          */
     //////////////////////////////
-    render() {
-        const { loaded, error, writerName, writerInfo, opResult } = this.state;
+    r() {
+        const { writerName, writerInfo } = this.state;
 
-        if (!loaded && !error) {
-            return <h1>Loading writers list ...</h1>
-        } else if (!loaded && error) {
-            return <h1>Error: {error}</h1>
-        } else if (error && loaded) {
-            return <h1>WriterEdit WTF state</h1>;
-        } else {
-            let opr = opResult ? <h2>OpResult: {this.state.opResult}</h2> : null;
-            return <div>
-                {opr}
-                <h1>{this.props.writerId ? "Edit writer details" : "Create new writer"}</h1>
-                <TextField width={180} onChange={HIValue(this, "writerName")} value={writerName} /><br />
-                <TextField textarea={true} rows={12} cols={120} onChange={HIValue(this, "writerInfo")} value={writerInfo} />
+        return <div>
+            <h1>{this.props.writerId ? "Edit writer details" : "Create new writer"}</h1>
+            <TextField width={180} onChange={HIValue(this, "writerName")} value={writerName} /><br />
+            <TextField textarea={true} rows={12} cols={120} onChange={HIValue(this, "writerInfo")} value={writerInfo} />
 
-                <Button onClick={this.uploadData}>{this.props.writerId ? "Update" : "Add new"}</Button>
-            </div>
-        }
-
+            <Button onClick={this.uploadData}>{this.props.writerId ? "Update" : "Add new"}</Button>
+        </div>
     }
 }

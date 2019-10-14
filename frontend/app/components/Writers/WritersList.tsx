@@ -1,69 +1,59 @@
 import { h, Component } from "preact";
 
 // components
-
 import List from "preact-material-components/List";
 
-import { IDefProps } from "../../iface";
+import BaseComponent from "../BaseComponent";
+
+import { IDefProps, IDefState } from "../../iface";
 import * as API from "../../common/ifaces";
 
 
 
-interface WritersListProps extends IDefProps {
+interface IWritersListProps extends IDefProps {
 }
 
-interface WritersListState {
+interface IWritersListState extends IDefState {
     list: API.RespWriterList,
-    error: string
 }
 
-export default class WritersList extends Component<WritersListProps, WritersListState> {
-    constructor() {
-        super();
+export default class WritersList extends BaseComponent<IWritersListProps, IWritersListState> {
+    constructor(p: IWritersListProps, ctx: any) {
+        super(p, ctx);
         this.state = {
             list: null,
-            error: null
         };
     }
 
+    fetchWriters() {
+        this.download("writers", `/api/writers`)
+        .then((res: API.RespWriterList) => {
+            this.setState({ list: res })
+        });
+    }
+
     componentDidMount() {
-        fetch(`/api/writers`, { method: "GET", cache: "no-cache" })
-            .then(res => res.json())
-            .then((res: API.APIResponse<API.RespWriterList>) => {
-                if (res.result == API.APIResponseResult.Fail) {
-                    this.setState({ list: null, error: res.resultDetail });
-                } else {
-                    this.setState({ list: res.data, error: null })
-                }
-            }).catch( (err) => {
-                this.setState({list: null, error: err});
-            });
+        this.fetchWriters();
     }
 
     //////////////////////////////
     /*          RENDER          */
     //////////////////////////////
-    render() {
-        const { list, error } = this.state;
+    r() {
+        const { list } = this.state;
+        if (!list) return <h1>Not loaded</h1>;
 
-        if (list == null && error == null) {
-            return <h1>Loading writers list ...</h1>
-        } else if (list == null && error != null) {
-            return <h1>Error: {error}</h1>
-        } else if (error != null && list != null) {
-            return <h1>WritersList WTF state</h1>;
-        } else {
-            return <div>
-                <List>
-                    <List.Item><a href={`/writers/new`}>New one</a></List.Item>
-                    <List.Divider />
-                    {list.map(itm =>
-                        <List.Item><a href={`/writers/${itm._id}`}>{itm.fullName}</a></List.Item>
-                    )
-                    }
-                </List>
-                </div>
-        }
+        return <div>
+            <List>
+                <List.Item><a href={`/writers/new`}>New one</a></List.Item>
+                <List.Divider />
+                {list.map(itm =>
+                    <List.Item><a href={`/writers/${itm._id}`}>{itm.fullName}</a></List.Item>
+                )
+                }
+            </List>
+        </div>
+
 
     }
 }

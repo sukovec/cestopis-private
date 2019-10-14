@@ -3,7 +3,6 @@
 
 .dialog {
     min-width: 20%;
-    min-height: 20%;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -20,12 +19,15 @@
     background-color: rgb(145, 189, 141);
 }
 
+.dialog .body {
+    padding: 10px;
+    min-height: 70px;
+}
+
 .dialog .footer {
     margin: 0px;
     padding: 2px;
     border-top: 1px solid #000000;
-    bottom: 0px;
-    position: absolute;
     width: 100%;
 }
 
