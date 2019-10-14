@@ -6,7 +6,7 @@ import ServiceWriters from "../services/serviceWriters";
 
 import * as API from "../common/ifaces";
 
-@controller('/api/writers')
+@controller('/api/writers', TYPES.NeedLogin)
 export class WritersController {
     constructor(@inject(TYPES.WritersService) private wrtsrv: ServiceWriters) {
 

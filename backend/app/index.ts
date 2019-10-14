@@ -28,6 +28,9 @@ import "./controllers/diary";
 import "./controllers/writers";
 import "./controllers/login";
 
+// middleware:
+import "./middleware/needlogin";
+
 // set up session store
 let sesstore = require('nedb-session-store')(session);
 

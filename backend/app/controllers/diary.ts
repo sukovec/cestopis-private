@@ -6,7 +6,7 @@ import ServiceDiary from "../services/serviceDiary";
 
 import * as API from "../common/ifaces";
 
-@controller('/api/diary')
+@controller('/api/diary', TYPES.NeedLogin)
 export class DiaryController {
     constructor(@inject(TYPES.DiaryService) private drsr: ServiceDiary) {
 

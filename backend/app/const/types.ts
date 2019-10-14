@@ -3,6 +3,8 @@ enum TYPES {
 	PhotoService = "photoservice",
 	WritersService = "writerservice",
 	DiaryService = "diaries",
-	AuthService = "authoservi"
+	AuthService = "authoservi",
+
+	NeedLogin = "needloginmiddleware",
 }
 export default TYPES;

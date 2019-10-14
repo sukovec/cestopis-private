@@ -11,7 +11,7 @@ import PhotoService from "../services/srvphotos";
 import * as API from "../common/ifaces";
 
 // lot of code in PhotosController MUST be rewritten to some singleton service!
-@controller('/api/photos')
+@controller('/api/photos', TYPES.NeedLogin)
 export class PhotosController {
     constructor(@inject(TYPES.database) private database: db, @inject(TYPES.PhotoService) private photosrv: PhotoService) {
 

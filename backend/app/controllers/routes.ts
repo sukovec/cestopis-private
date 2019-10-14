@@ -6,7 +6,7 @@ import db from "../services/db";
 import * as API from "../common/ifaces";
 import fetch from "node-fetch";
 
-@controller('/api/routes')
+@controller('/api/routes', TYPES.NeedLogin)
 export class RouteController {
 	constructor(@inject(TYPES.database) private database: db) {
 
