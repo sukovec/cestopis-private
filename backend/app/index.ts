@@ -5,9 +5,10 @@ import * as bodyParser from 'body-parser';
 import * as path  from "path";
 import * as session from "express-session";
 import * as uuid from "uuid/v4";
+import * as prettyjson from "prettyjson";
 
 import { Container } from "inversify";
-import { InversifyExpressServer } from 'inversify-express-utils';
+import { InversifyExpressServer, getRouteInfo } from 'inversify-express-utils';
 import { buildProviderModule } from "inversify-binding-decorators";
 
 
@@ -54,5 +55,7 @@ container.load(buildProviderModule())
 let app = server.build();
 app.listen(CFG.serverPort, CFG.serverListen);
 
-console.log("Roonning on http://localhost:9080/");
+console.log("Running on http://localhost:9080/");
 console.log("Static from: ", path.resolve("../frontend/dist"));
+const routeInfo = getRouteInfo(container);
+console.log(prettyjson.render(routeInfo));

@@ -45,6 +45,19 @@ export class LoginController {
         } ;
     }
 
+    @httpGet("/logout")
+    public async logout(@request() req: express.Request): Promise<API.APIResponse<API.LoginStatus>> {
+        req.session.destroy((err) => {if (!err) return ; console.error("Session destroy failed", err)});
+        return {
+            result: API.APIResponseResult.OK,
+            data: {
+                logged: false,
+                user: undefined
+            }
+        };
+    }
+
+
     @httpPost("/login")
     public async login(@request() req: express.Request, @requestBody() body: API.LoginRequest): Promise<API.APIResponse<API.LoginStatus>> {
         if (!req.session.challenge) {

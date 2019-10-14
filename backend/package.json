@@ -15,6 +15,7 @@
     "@types/express-session": "^1.15.14",
     "@types/nedb": "^1.8.9",
     "@types/node-fetch": "^2.5.2",
+    "@types/prettyjson": "0.0.29",
     "@types/uuid": "^3.4.5",
     "csv-parse": "^4.4.7",
     "express": "^4.17.1",
@@ -27,6 +28,7 @@
     "nedb-session-store": "^1.1.2",
     "node-exiftool": "^2.3.0",
     "node-fetch": "^2.6.0",
+    "prettyjson": "^1.2.1",
     "reflect-metadata": "^0.1.13",
     "typescript": "^3.6.3",
     "uuid": "^3.3.3"

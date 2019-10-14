@@ -2,11 +2,12 @@
 @import url('laptop.css') only screen and (orientation: landscape);
 
 .dialog {
-    width: 40%;
-    height: 30%;
+    min-width: 20%;
+    min-height: 20%;
     position: absolute;
-    left: 30%;
-    top: 35%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     background-color: rgb(185, 211, 182);
     border: 1px solid #000000;
     z-index: 5;
