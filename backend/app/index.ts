@@ -21,6 +21,7 @@ import "./services/srvphotos";
 import "./services/serviceWriters";
 import "./services/serviceDiary";
 import "./services/auth";
+import "./services/misc";
 
 // controllers:
 import "./controllers/routes";
@@ -28,6 +29,7 @@ import "./controllers/photos";
 import "./controllers/diary";
 import "./controllers/writers";
 import "./controllers/login";
+import "./controllers/misc";
 
 // middleware:
 import "./middleware/needlogin";
@@ -60,7 +62,9 @@ server.setConfig((app) => {
 server.setErrorConfig((app) => {
 	app.use((req, res, next) => {
 		res.status(404);
-		res.send({ result: API.APIResponseResult.Fail, resultDetail: "!notfound", })
+		res.send({ result: API.APIResponseResult.Fail, resultDetail: "!notfound", });
+
+		console.log(`ERROR 404: ${req.url}`);
 	});
 	app.use(ErrorMW);
 });

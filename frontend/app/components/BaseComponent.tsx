@@ -103,6 +103,7 @@ export default abstract class BaseComponent<P extends X.IDefProps, S extends X.I
             }
         });
 
+        // TODO: Save the original Promise as it have to be called when really finished!
         ret.catch( (err) => {
             this.downloadFinished(cdown);
             this.addError(err, () => {

@@ -13,6 +13,7 @@ export default class Database {
 	public readonly diary: Dataset;
 	public readonly writers: Dataset;
 	public readonly users: Dataset;
+	public readonly misc: Dataset; // not sure, if this is correct way of using this DB 
 
 	constructor() {
 		let path = CFG.databasePath;
@@ -22,10 +23,18 @@ export default class Database {
 		this.diary = new Dataset(   {filename: `${path}/diary.ndb`,   autoload: true });
 		this.writers = new Dataset( {filename: `${path}/writers.ndb`, autoload: true });
 		this.users = new Dataset(   {filename: `${path}/users.ndb`,   autoload: true });
+		this.misc = new Dataset(    {filename: `${path}/misc.ndb`,    autoload: true });
 
 		this.phtags.ensureIndex({fieldName: "tagName", unique: true}, (err) => {
 			if (err != null) {
 				console.warn("Index on phtags.tagName is not ensured!");
+				console.error(err);
+			}
+		});
+
+		this.misc.ensureIndex({"fieldName": "name", unique: true}, (err) => {
+			if (err != null) {
+				console.warn("Index on misc.name is not ensured!");
 				console.error(err);
 			}
 		});

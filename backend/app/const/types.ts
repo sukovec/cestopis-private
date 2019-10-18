@@ -4,6 +4,7 @@ enum TYPES {
 	WritersService = "writerservice",
 	DiaryService = "diaries",
 	AuthService = "authoservi",
+	MiscService = "miscservi",
 
 	NeedLogin = "needloginmiddleware",
 }

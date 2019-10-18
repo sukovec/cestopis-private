@@ -6,10 +6,6 @@ The main focus of this project are maps - displaying all the way I've made with 
 
 Basically, this should work like website generator and the result should be (ideally) without any server-side scripting and with minimum client-side scripting. Just for displaying things that wouldn't work without scripting (maps). 
 
-## The project is divided into two parts:
-* Backend
-* Frontend
-
 ## How to run it?
 
 * There's no reason to run this right now, as the only few parts works and nothing works well enough. Especially, there is still no export module, just few parts more or less working (or, to be honest, less or lesser working). But, if you would like to run this, you could do it this way:
