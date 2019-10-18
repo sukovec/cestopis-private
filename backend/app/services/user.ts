@@ -9,8 +9,8 @@ import * as API from "../common/ifaces";
 
 let provideSingleton = function(identifier: any) { return fluentProvide(identifier).inSingletonScope().done(); };
 
-@provideSingleton(TYPES.AuthService)
-export default class AuthService { 
+@provideSingleton(TYPES.UserService)
+export default class UserService { 
     public constructor(@inject(TYPES.database) private dbase: db) {
     }
 
@@ -24,6 +24,29 @@ export default class AuthService {
 
                 res(doc);
             })
+        });
+    }
+
+    public getUserById(usrId: string): Promise<API.User> {
+        return new Promise( (res, rej) => {
+            this.dbase.users.findOne({_id: usrId}, (err, doc: API.User) => {
+                if (err) return rej(err);
+                if (!doc) { 
+                    return rej(new Error("User with given ID was not found")); 
+                }
+
+                res(doc);
+            })
+        });
+    }
+
+    public updateUserConfig(usrId: string, cfg: API.UserConfig): Promise<void> {
+        return new Promise( (res, rej) => {
+            this.dbase.users.update({_id: usrId}, {$set: { userConfig: cfg}}, {}, (err, nou) => {
+                if (err) return rej(err);
+                if (nou != 1) return rej("User config was not updated");
+                res();
+            });
         });
     }
 

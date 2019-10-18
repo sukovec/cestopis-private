@@ -3,7 +3,7 @@ enum TYPES {
 	PhotoService = "photoservice",
 	WritersService = "writerservice",
 	DiaryService = "diaries",
-	AuthService = "authoservi",
+	UserService = "authoservi",
 	MiscService = "miscservi",
 
 	NeedLogin = "needloginmiddleware",

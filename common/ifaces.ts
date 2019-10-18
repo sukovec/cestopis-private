@@ -131,18 +131,22 @@ export interface Post {
 }
 
 /*********************************/
-//              AUTH             //
+//              USER             //
 /*********************************/
 
+export interface UserConfig { 
+    assocWriterId: string;
+    lastDate: string;
+    lastMapCoords: LatLng;
+    lastMapZoom: number;
+}
+
+// TODO: Move out. This is internal, just for backend and must not be moved out
 export interface User {
+    _id?: string;
     username: string;
     pwhash: string; // password hashed by sha256
-    userConfig: { 
-        assocWriterId: string;
-        lastDate: string;
-        lastMapCoords: LatLng;
-        lastMapZoom: number;
-    }
+    userConfig: UserConfig;
 }
 
 export interface LoginRequest {
@@ -187,6 +191,7 @@ export type RespPostList = Post[];
 export type RespChallenge = string;
 export type RespLoginStatus = LoginStatus;
 export type RespConfiguration = Configuration;
+export type RespUserConfig = UserConfig;
 
 export type APIPossibleResponse = 
     void | 
@@ -203,7 +208,8 @@ export type APIPossibleResponse =
     RespPostList | 
     RespChallenge |
     RespLoginStatus | 
-    RespConfiguration;
+    RespConfiguration |
+    RespUserConfig ;
     
 export type APIResultDetail = any; // alias error detail would be better
 export interface APIResponse<T extends APIPossibleResponse > {

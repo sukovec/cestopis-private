@@ -9,6 +9,9 @@ import FormField from "preact-material-components/FormField";
 import Radio from "preact-material-components/Radio";
 import Button from "preact-material-components/Button";
 
+// local components
+import WriterSelect from "../Writers/WriterSelect";
+
 import { IDefProps, IDefState } from "../../iface";
 import * as API from "../../common/ifaces";
 import { HIValue } from "../../lib/onchange";
@@ -121,18 +124,12 @@ export default class EditPost extends BaseComponent<EditPostProps, EditPostState
         </fieldset>;
     }
 
-    renderWriterSelect(wrts: API.Writer[]) {
-        return <fieldset onChange={HIValue(this, "selectedWriterId")}>
-            {wrts.map(itm => <FormField><Radio name="writerselect" value={itm._id} checked={itm._id == this.state.selectedWriterId} />{itm.fullName}</FormField>)}
-        </fieldset>;
-    }
-
     r() {
-        const { writerList, postDate, postContent } = this.state;
+        const { writerList, postDate, postContent, selectedWriterId } = this.state;
         if (!writerList) return <h1>Load first</h1>;
         return <div>
             {this.renderPostType()}
-            {this.renderWriterSelect(writerList)}
+            <WriterSelect onChange={HIValue(this, "selectedWriterId")} writers={writerList} selected={selectedWriterId} />
             <fieldset>
                 <TextField type="date" helperText="Date of day" helperTextPersistent={true} box={true} onChange={HIValue(this, "postDate")} value={postDate} />
 
