@@ -7,7 +7,7 @@ import TYPES from "../const/types";
 import * as API from "../common/ifaces";
 import AuthService from '../services/auth';
 
-@controller('/api/auth')
+@controller('/api/user')
 export class LoginController {
     constructor(@inject(TYPES.AuthService) private authsrv: AuthService) {
 
@@ -45,7 +45,7 @@ export class LoginController {
         } ;
     }
 
-    @httpGet("/logout")
+    @httpPost("/logout")
     public async logout(@request() req: express.Request): Promise<API.APIResponse<API.LoginStatus>> {
         req.session.destroy((err) => {if (!err) return ; console.error("Session destroy failed", err)});
         return {

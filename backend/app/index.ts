@@ -28,7 +28,7 @@ import "./controllers/routes";
 import "./controllers/photos";
 import "./controllers/diary";
 import "./controllers/writers";
-import "./controllers/login";
+import "./controllers/user";
 import "./controllers/misc";
 
 // middleware:

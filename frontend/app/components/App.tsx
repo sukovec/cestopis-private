@@ -46,14 +46,14 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 	}
 
 	componentDidMount() {
-		this.download("login status", "/api/auth/status")
+		this.download("login status", "/api/user/status")
 			.then((res: API.RespLoginStatus) => {
 				this.setState({ logged: res.logged, username: res.user });
 			});
 	}
 
 	logout() {
-		this.download("logout", "/api/auth/logout")
+		this.download("logout", "/api/user/logout", "POST")
 			.then((res: API.RespLoginStatus) => {
 				this.setState({ logged: res.logged, username: res.user });
 			});
@@ -64,12 +64,12 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 		let pwd = this.state.password;
 		/**/
 		//crypto.subtle
-		//return this.download("login", "/api/auth/login", "POST", )
+		//return this.download("login", "/api/user/login", "POST", )
 
 		let txe = new TextEncoder();
 
 		// download challenge
-		let challenge: API.RespChallenge = await this.download("challenge", "/api/auth/challenge")
+		let challenge: API.RespChallenge = await this.download("challenge", "/api/user/challenge")
 
 		// digest user-entered password
 		let pwbin = txe.encode(pwd); // utf8 -> bin
@@ -85,7 +85,7 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 			passwd: finalhash
 		};
 
-		let logstat: API.RespLoginStatus = await this.download("login", "/api/auth/login", "POST", body);
+		let logstat: API.RespLoginStatus = await this.download("login", "/api/user/login", "POST", body);
 
 		this.setState({ logged: logstat.logged, username: logstat.user, password: null });
 		if (!logstat.logged) {
@@ -102,7 +102,6 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 			<Button outlined onclick={() => route("/config")}>Configuration</Button>
 			
 			<Button secondary onclick={this.logout}>Log out</Button>
-			<Button secondary>Change password</Button>
 
 			<hr />
 			<Router history={createHashHistory()}>
