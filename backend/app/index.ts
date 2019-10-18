@@ -20,7 +20,7 @@ import "./services/db"
 import "./services/srvphotos";
 import "./services/serviceWriters";
 import "./services/serviceDiary";
-import "./services/auth";
+import "./services/user";
 import "./services/misc";
 
 // controllers:

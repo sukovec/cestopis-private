@@ -5,7 +5,7 @@ import * as express from "express";
 import TYPES from "../const/types";
 
 import * as API from "../common/ifaces";
-import AuthService from '../services/auth';
+import AuthService from '../services/user';
 
 @controller('/api/user')
 export class LoginController {
@@ -80,5 +80,7 @@ export class LoginController {
             }
         };
     }
+
+
 
 }
