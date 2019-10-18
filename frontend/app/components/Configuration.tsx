@@ -1,11 +1,19 @@
 import { h } from "preact";
 
-import { IDefProps } from "../iface";
+import TextField from "preact-material-components/TextField";
 
-export interface IConfigurationProps extends IDefProps {
-	action?: string;
-}
+import { IDefProps, IDefState } from "../iface";
+import BaseComponent from "./BaseComponent";
 
-export default function Configuration(props: IConfigurationProps) {
-    return <h1>Not implemented</h1>
+interface IConfigurationProps extends IDefProps {}
+interface IConfigurationState extends IDefState {}
+
+export default class Configuration extends BaseComponent<IConfigurationPops, IConfigurationState> {
+    constructor(p: IConfigurationProps, ctx: any) {
+        super(p, ctx);
+    }
+
+    r() {
+    return <TextField type="date" helperText="Date of day" helperTextPersistent={true} box={true} onChange={HIValue(this, "postDate")} value={postDate} />;
+    }
 }

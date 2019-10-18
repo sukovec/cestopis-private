@@ -53,6 +53,8 @@ server.setConfig((app) => {
 		genid: (req) => { return uuid() }
 	}));
 	app.use("/", express.static(path.resolve("../frontend/dist")));
+
+	app.set("x-powered-by", false);
 });
 
 server.setErrorConfig((app) => {

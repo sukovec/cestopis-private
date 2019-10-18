@@ -1,6 +1,6 @@
 {
-  "name": "cestopis-private-frontend",
-  "version": "1.0.0",
+  "name": "viajereporter-frontend",
+  "version": "0.0.1",
   "description": "Frontend of administration part of the travelbook app",
   "main": "index.js",
   "scripts": {

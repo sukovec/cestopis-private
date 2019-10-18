@@ -1,6 +1,6 @@
 {
-  "name": "cestopis-private-backend",
-  "version": "1.0.0",
+  "name": "viajereporter-backend",
+  "version": "0.0.1",
   "description": "Backend of administration part of the travelbook app",
   "main": "dist/app/index.js",
   "scripts": {
