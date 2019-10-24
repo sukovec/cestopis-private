@@ -6,7 +6,7 @@ import { TextEncoder } from "util";
 
 export const fetch = require("fetch-cookie")(fetchOrig) as typeof fetchOrig; // oink
 
-function sha256(str: string): string { 
+function sha256(str: string): string {
     let tenc = new TextEncoder();
 
     let hash = crypto.createHash("sha256")
@@ -20,10 +20,10 @@ function sha256(str: string): string {
 function getChallenge(): Promise<string> {
     console.log("Getting challenge");
     return fetch(`http://localhost:${CFG.serverPort}/api/user/challenge`, {})
-    .then( resp => resp.json() )
-    .then ( (res: API.APIResponse<API.RespChallenge>) => {
-        return res.data;
-    });
+        .then(resp => resp.json())
+        .then((res: API.APIResponse<API.RespChallenge>) => {
+            return res.data;
+        });
 }
 
 export async function login(user: string, pass: string): Promise<boolean> {
@@ -38,20 +38,23 @@ export async function login(user: string, pass: string): Promise<boolean> {
 
     console.log("Sending login request");
 
-    return fetch(`http://localhost:${CFG.serverPort}/api/user/login`, {
-        method: "POST", 
+    let result = await fetch(`http://localhost:${CFG.serverPort}/api/user/login`, {
+        method: "POST",
         body: JSON.stringify(log),
         headers: { "content-type": "application/json" }
-    })
-    .then( res => res.json() )
-    .then( (res: API.APIResponse<API.LoginStatus>) => {
-        if (!res.data || !res.data.logged) {
-            console.log("Logged in");
-            console.log(res);
-            return true;
-        } else {
-            console.log("Failed");
-            return false;
-        }
-    })
+    });
+    let res: API.APIResponse<API.LoginStatus> = await result.json();
+
+    if (res.result == API.APIResponseResult.Fail) 
+        throw new Error("API call for login failed");
+    
+    if (res.data && res.data.logged) {
+        console.log("Logged in");
+        return true;
+    } else {
+        console.log("Failed");
+        console.log(res);
+
+        throw new Error("Login failed");
+    }
 }

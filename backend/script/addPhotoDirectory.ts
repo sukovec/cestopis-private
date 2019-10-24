@@ -235,7 +235,7 @@ async function processIt(): Promise<void> {
 let user = process.env.VR_USER;
 let pass = process.env.VR_PASS;
 
-console.log(`Trying to log ${user} with password ${pass ? "not null" : "empty"}`);
+console.log(`Trying to log '${user}' with password ${pass ? "not null" : "empty"}`);
 
 login(user, pass)
 .then( (res) => {
