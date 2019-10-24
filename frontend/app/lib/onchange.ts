@@ -1,6 +1,6 @@
 import { Component } from "preact";
 
-export function HIValue(component: Component, stateVar: string) {
+export function HIValue<TProp, TState, TComp extends Component<TProp,TState>>(component: TComp, stateVar: keyof TState) {
     return (evt: Event) => {
         let st: any = {};
 
