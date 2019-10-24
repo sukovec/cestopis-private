@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h, JSX } from "preact";
 import FormField from "preact-material-components/FormField";
 import Radio from "preact-material-components/Radio";
 

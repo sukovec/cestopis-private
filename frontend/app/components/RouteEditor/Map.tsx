@@ -39,7 +39,7 @@ export default class Map extends Component<MapProps, MapStat> {
     }
 
     componentDidMount() {
-        this.map = L.map(this.base);
+        this.map = L.map(this.base as HTMLElement);
         this.map.setView([0, 0], 0);
 //      map.setView(this.props.view, this.props.viewZoom);
 
