@@ -51,42 +51,6 @@ export class PhotosController {
         return this.getPhotoList(null);
     }
 
-    @httpPost("/photo")
-    public addNewPhoto(@requestBody() body: API.Photo): Promise<API.APIResponse<API.RespID>> {
-        return this.photosrv.addPhotoDoc(body)
-        .then( (id: string) => {
-            return {
-                result: API.APIResponseResult.OK,
-                data: id
-            };
-        })
-        .catch( (err) => {
-            return {
-                result: API.APIResponseResult.Fail,
-                resultDetail: err,
-                data: undefined
-            };
-        });
-    }
-
-    @httpDelete("/photo/:id")
-    public removePhoto(@requestParam("id") id: string): Promise<API.APIResponse<void>> {
-        return this.photosrv.removePhotoDoc(id)
-        .then( (okej: boolean) => {
-            return {
-                result: okej ? API.APIResponseResult.OK : API.APIResponseResult.Fail,
-                data: undefined
-            };
-        })
-        .catch( (err) => {
-            return {
-                result: API.APIResponseResult.Fail,
-                resultDetail: err,
-                data: undefined
-            };
-        });
-    }
-
     // Getting something about photo with actual ID:
 
     private getPhotoById(id: string): Promise<API.Photo> {
@@ -220,5 +184,43 @@ export class PhotosController {
         })
     }
 
+    // only for localhost
+
+
+    @httpPost("/photo", TYPES.NeedAdmin)
+    public addNewPhoto(@requestBody() body: API.Photo): Promise<API.APIResponse<API.RespID>> {
+        return this.photosrv.addPhotoDoc(body)
+        .then( (id: string) => {
+            return {
+                result: API.APIResponseResult.OK,
+                data: id
+            };
+        })
+        .catch( (err) => {
+            return {
+                result: API.APIResponseResult.Fail,
+                resultDetail: err,
+                data: undefined
+            };
+        });
+    }
+
+    @httpDelete("/photo/:id", TYPES.NeedAdmin)
+    public removePhoto(@requestParam("id") id: string): Promise<API.APIResponse<void>> {
+        return this.photosrv.removePhotoDoc(id)
+        .then( (okej: boolean) => {
+            return {
+                result: okej ? API.APIResponseResult.OK : API.APIResponseResult.Fail,
+                data: undefined
+            };
+        })
+        .catch( (err) => {
+            return {
+                result: API.APIResponseResult.Fail,
+                resultDetail: err,
+                data: undefined
+            };
+        });
+    }
 
 }

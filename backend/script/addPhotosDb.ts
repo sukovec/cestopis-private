@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as moment from "moment";
-import fetch from "node-fetch";
 import { execFile } from "child_process";
 
 const exif = require("node-exiftool");
@@ -10,6 +9,7 @@ const exifproc = new exif.ExiftoolProcess();
 import CFG from "../app/const/config";
 import * as API from "../app/common/ifaces";
 
+import { login, fetch } from "./login";
 
 let nodatenum = Number.MIN_SAFE_INTEGER; // for the images with no date or even no file (shouldn't exist at all, but for the case...)
 
@@ -135,7 +135,7 @@ function getFileList(dir: string) {
 async function uploadDocument(doc: API.Photo): Promise<API.RespID> {
     let reply;
     try {
-        reply = await fetch(`http://127.0.0.1:${CFG.serverPort}/api/photos/photo`, {
+        reply = await fetch(`http://localhost:${CFG.serverPort}/api/photos/photo`, {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify(doc)
@@ -232,8 +232,16 @@ async function processIt(): Promise<void> {
     }
 }
 
-let p = processIt();
-p.catch((reas) => {
+let user = process.env.VR_USER;
+let pass = process.env.VR_PASS;
+
+console.log(`Trying to log ${user} with password ${pass ? "not null" : "empty"}`);
+
+login(user, pass)
+.then( (res) => {
+    return processIt();
+})
+.catch((reas) => {
     console.error("Catched error!");
 
     console.error(reas);

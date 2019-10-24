@@ -146,6 +146,7 @@ export interface User {
     _id?: string;
     username: string;
     pwhash: string; // password hashed by sha256
+    admin?: boolean; // if admin, can connect only from localhost
     userConfig: UserConfig;
 }
 

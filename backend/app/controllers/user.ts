@@ -63,14 +63,21 @@ export class LoginController {
             throw new Error("First, call for /api/auth/challenge");
         }
 
-        let user = await this.authsrv.getUserByName(body.user);
+        let user: API.User;
+
+        try { 
+            user = await this.authsrv.getUserByName(body.user);
+        } catch (er) {
+            throw new Error("User does not exists");
+        }
+
         let result = await this.authsrv.authenticate(body, req.session.challenge);
         req.session.challenge = undefined;
-
         if (result) {
             req.session.logged = true;
             req.session.user = user.username;
             req.session.userId = user._id;
+            req.session.admin = user.admin;
         }
 
         return {

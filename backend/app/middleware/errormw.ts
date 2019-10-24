@@ -13,7 +13,7 @@ export default function errorMiddleware(err: any, req: express.Request, res: exp
 
     let body: API.APIResponse<void> = {
         result: API.APIResponseResult.Fail,
-        resultDetail: err,
+        resultDetail: err.message ? err.message : err,
         data: undefined
     };
 

@@ -7,5 +7,6 @@ enum TYPES {
 	MiscService = "miscservi",
 
 	NeedLogin = "needloginmiddleware",
+	NeedAdmin = "needadminandlocalhost" 
 }
 export default TYPES;

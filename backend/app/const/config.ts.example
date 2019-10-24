@@ -5,5 +5,12 @@ export default {
     serverListen: "0.0.0.0",
     exportThumbPath: "/var/www/vps.sukovec.cz/test-thumbs",
     databasePath: "/home/suk/code/cestopis/data",
-    sessionSecret: "this-is-session-secret-change-it-for-production"
+    sessionSecret: "this-is-session-secret-change-it-for-production",
+    // few controller endpoints need to work just in for localhost
+    // hovewer when using reverse proxy, every request is from localhost.
+    // following means that the JustForLocalhost midleware will not look 
+    // at connection.req.remoteAddress but at "x-forwarded-for" header
+    // always verify, that reverse-proxy sends "x-forwarded-for"!
+    usingReverseProxy: false,
+
 };

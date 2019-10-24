@@ -63,6 +63,7 @@ export default class UserService {
             usr = await this.getUserByName(req.user);
         }
         catch(exc) {
+            console.log("Ha, prej uzivatel neexistuje, to je fakt divny, ne?", req)
             console.warn(`Unsuccessfull login, user not found: '${req.user}'`);
             return false;
         }
@@ -76,7 +77,7 @@ export default class UserService {
 
         const corhash = Array.from(new Uint8Array(corrcthash));
         const corhex = corhash.map(b => b.toString(16).padStart(2, '0')).join('');
-      
+
         let ret = corhex == req.passwd;
         if (!ret) 
             console.warn(`Unsuccessfull login, bad pasword for user '${req.user}'`);

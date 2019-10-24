@@ -73,8 +73,7 @@ container.load(buildProviderModule())
 
 let app = server.build();
 app.listen(CFG.serverPort, CFG.serverListen);
-
-console.log("Running on http://localhost:9080/");
+console.log(`Running on http://${CFG.serverListen}:${CFG.serverPort}/`);
 console.log("Static from: ", path.resolve("../frontend/dist"));
 const routeInfo = getRouteInfo(container);
 console.log(prettyjson.render(routeInfo));
