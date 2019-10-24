@@ -1,3 +1,6 @@
+throw new Error("There is no reason to use this anymore");
+
+
 import * as API from "../app/common/ifaces";
 import db from "../app/services/db";
 

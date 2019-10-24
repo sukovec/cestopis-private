@@ -1,3 +1,5 @@
+throw new Error("There is no reason to use this anymore");
+
 import * as fs from "fs";
 import * as path from "path";
 import * as parse from "csv-parse/lib/sync";
