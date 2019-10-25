@@ -7,6 +7,7 @@ export interface DirectoryStats {
     photos: number;
     untagged: number;
     places: string[];
+    sources: PhotoSource[];
 };
 
 export interface PhotoSubTag {

@@ -40,7 +40,7 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
 
     fetchMetadata(photoId: string) {
         // fetch photo metadata
-        this.download("photo metadata", `/api/photos/photo/${photoId}/info`)
+        this.download("photo metadata", `api/photos/photo/${photoId}/info/`)
             .then((res: API.RespPhotoInfo) => {
                 this.setState({
                     comment: res.comment,

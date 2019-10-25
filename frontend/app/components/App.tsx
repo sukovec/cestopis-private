@@ -106,7 +106,7 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 			<hr />
 			<Router history={createHashHistory()}>
 				<RouteEditor path="/routes/:action?/:id?" />
-				<PhotoTagger path="/photos/:action?/:id?/:id2?" />
+				<PhotoTagger path="/photos/:action?/:id?/:id2?/:id3?" />
 				<Diary path="/diary/:action?" />
 				<Writers path="/writers/:writerId?" />
 				<Configuration path="/config" />

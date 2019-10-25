@@ -35,7 +35,7 @@ export default class PhotoService {
 
                 let prepdata = docs.reduce( (retobj: any, cur: API.Photo) => {
                     if (retobj[cur.folder] == undefined)
-                        retobj[cur.folder] = { dirName: cur.folder, photos: 0, untagged: 0, places: new Set()};
+                        retobj[cur.folder] = { dirName: cur.folder, photos: 0, untagged: 0, places: new Set(), sources: new Set()};
 
                     retobj[cur.folder].photos++;
                     if (Object.keys(cur.tags).length == 0)
@@ -44,12 +44,15 @@ export default class PhotoService {
                     if (cur.tags[this.idTagPlace])
                         retobj[cur.folder].places.add(cur.tags[this.idTagPlace].subtag);
 
+                    retobj[cur.folder].sources.add(cur.source);
+                    
                     return retobj;
                 }, {});
 
                 res(Object.keys(prepdata).map( (itm) => {
                     let ret = prepdata[itm];
                     ret.places = Array.from(ret.places);
+                    ret.sources = Array.from(ret.sources);
                     return ret;
                 }));
             });

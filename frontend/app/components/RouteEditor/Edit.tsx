@@ -132,7 +132,7 @@ export default class RouteEdit extends Component<EditProps, EditStat> {
     //////////////////////////////
     /*          RENDER          */
     //////////////////////////////
-    render() {
+    render() { // that enum mapping is probably wrong!
         if (this.props.createNew)
             return <div>
                 <h1>Create new</h1>

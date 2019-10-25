@@ -10,10 +10,6 @@ import * as API from "../common/ifaces";
 function isLocalhost(req: express.Request) {
     const LOCALHOST = ["127.0.0.1", "::1"];
 
-    console.log("Is localhost?");
-    console.log("\t", req.connection.remoteAddress);
-    console.log("\t", req.headers["x-forwarded-for"]);
-
     if (CFG.usingReverseProxy) {
         return LOCALHOST.includes(req.connection.remoteAddress) && !req.headers["x-forwarded-for"];
     } else {
