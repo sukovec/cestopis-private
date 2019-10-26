@@ -62,6 +62,31 @@ export interface Photo {
     comment: string;
 };
 
+/**
+ * API request to change multiple tags at multiple photos
+ * API URL: `/api/photos/multitag` (PATCH only)
+ * API response: void
+ */
+export interface MultiTagRequest {
+    /**
+     * Every property of request is ID of photo to be tagged
+     */
+    [photo_id: string]: {
+        /**
+         * PhotoTagset of tags which will be merged with existing tags
+         */
+        add?: PhotoTagset; 
+        /**
+         * PhotoTagset of tags which will be removed (potential subtags are ignored)
+         */
+        remove?: PhotoTagset;
+        /**
+         * PhotoTagset of tags, on which subtag should be changed to new value
+         */
+        change?: PhotoTagset;
+    }
+}
+
 /************************************
  *              ROUTES              *
  ************************************/
@@ -182,7 +207,10 @@ export enum APIResponseResult {
 export type RespRoute = LatLng[];
 export type RespID = string;
 export type RespPhotoDirlist = DirectoryStats[];
-export type RespPhotoList = string[];
+
+export type RespPhotoListSimple = string[];
+export type RespPhotoListFull = Photo[];
+export type RespPhotoList = RespPhotoListFull | RespPhotoListSimple; // it can be either just list of ID's or full list with metadatas
 export type RespTagList = PhotoTag[];
 export type RespPhotoAround = PhotoAround;
 export type RespPhotoInfo = Photo;

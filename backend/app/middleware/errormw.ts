@@ -1,12 +1,11 @@
-import { BaseMiddleware } from "inversify-express-utils";
-import { provide } from "inversify-binding-decorators";
-
 import * as express from "express";
 
-import TYPES from "../const/types";
 import * as API from "../common/ifaces";
 
 export default function errorMiddleware(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+    console.error(`ERROR 500 on ${req.url}`);
+    console.log(err);
+
     if (!res.headersSent) {
         res.status(500);
     }

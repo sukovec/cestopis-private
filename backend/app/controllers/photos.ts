@@ -1,4 +1,12 @@
-import { controller, httpGet, response, requestBody, httpPost, httpDelete, requestParam } from 'inversify-express-utils';
+import { 
+    controller, 
+    httpGet, 
+    response, 
+    requestBody, 
+    httpPost, 
+    httpDelete, 
+    requestParam,
+    queryParam } from 'inversify-express-utils';
 import { inject } from "inversify";
 import * as express from "express";
 import * as path from "path";
@@ -28,7 +36,7 @@ export class PhotosController {
     }
 
     @httpGet("/photos/:dir")
-    public getPhotoList(@requestParam("dir") dir: string): Promise<API.APIResponse<API.RespPhotoList>> {
+    public getPhotoList(@requestParam("dir") dir: string, @queryParam("full") full: boolean): Promise<API.APIResponse<API.RespPhotoList>> {
         return new Promise((res, rej) => {
             let search = {};
             if (dir !== null) search = { folder: dir };
@@ -38,7 +46,7 @@ export class PhotosController {
 
                 let ret: API.APIResponse<API.RespPhotoList> = {
                     result: API.APIResponseResult.OK,
-                    data: docs.map(itm => itm._id)
+                    data: full ? docs : docs.map(itm => itm._id)
                 };
 
                 res(ret);
@@ -47,8 +55,8 @@ export class PhotosController {
     }
     
     @httpGet("/photos")
-    public getAllPhotos(@requestParam("dir") dir: string): Promise<API.APIResponse<API.RespPhotoList>> {
-        return this.getPhotoList(null);
+    public getAllPhotos(): Promise<API.APIResponse<API.RespPhotoList>> {
+        return this.getPhotoList(null, false);
     }
 
     // Getting something about photo with actual ID:

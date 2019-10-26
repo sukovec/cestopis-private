@@ -10,7 +10,7 @@ interface PhotoListProps extends IDefProps {
 }
 
 interface PhotoListStats extends IDefState {
-    photolist: API.RespPhotoList,
+    photolist: API.RespPhotoListSimple,
 }
 
 export default class PhotoTaggerPhotolist extends BaseComponent<PhotoListProps, PhotoListStats> {
@@ -23,7 +23,7 @@ export default class PhotoTaggerPhotolist extends BaseComponent<PhotoListProps, 
 
     fetchPhotoList(dir: string) {
         this.download("photo list", `/api/photos/photos/${dir}`)
-            .then((res: API.RespPhotoList) => {
+            .then((res: API.RespPhotoListSimple) => {
                 this.setState({ photolist: res })
             });
     }

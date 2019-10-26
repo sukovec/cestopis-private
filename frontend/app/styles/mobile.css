@@ -34,25 +34,29 @@ margin-top: 50px;
 /* image-checkboxes */
 .imgcheck {
 	display: inline-block;
+	border-width: 6px;
+	border-style: solid;
+	border-color: #400000;
 }
 
-.imgcheck input {
-	display: none;
+.imgcheck.isfulltag {
+	border-color: #006000;
+}
+.imgcheck.isothersubtag {
+	border-color: #0000ff;
+
+}
+.imgcheck.isselected {
+	border-color: #00ff00;
+}
+
+.imgcheck.isremoved {
+	border-color: #ff0000;
 }
 
 .imgcheck label { 
 	display: block;
-	border: 6px solid #FF0000;
 }
-
-.imgcheck input:checked + label {
-	border: 6px solid #00FF00;
-}
-
-.imgcheck.othertag label {
-	border: 6px solid #0000FF;
-}
-
 /* hideable "window" */
 
 .switchable label {

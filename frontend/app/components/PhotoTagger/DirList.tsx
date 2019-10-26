@@ -45,7 +45,6 @@ export default class DirList extends BaseComponent<DirListProps, DirListStats> {
     //////////////////////////////
 
     renderFilterSource() {
-
         let phoso: any = API.PhotoSource;
 
         const { curFilter } = this.state;
