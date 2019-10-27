@@ -39,13 +39,13 @@ export class Tags extends ApiUrl {
 }
 
 export class Users extends ApiUrl {
-    protected readonly _root = "/users";
+    protected readonly _root = "/user";
 
-    public readonly status = "status";
-    public readonly challenge = "challenge";
-    public readonly login = "login";
-    public readonly logout = "logout";
-    public readonly config = "config";
+    public readonly status = "/status";
+    public readonly challenge = "/challenge";
+    public readonly login = "/login";
+    public readonly logout = "/logout";
+    public readonly config = "/config";
 }
 
 export class Writers extends ApiUrl {

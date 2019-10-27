@@ -45,12 +45,15 @@ export default class EditPost extends BaseComponent<EditPostProps, EditPostState
     }
 
     uploadPost() {
-        let method = "POST";
-        let URL = `/api/diary`;
+        let method: string;
+        let URL: string;
 
         if (this.props.postId) {
-            URL = URL + `/${this.props.postId}`;
+            URL = API.Urls.Diary.p("post", this.props.postId);
             method = "PATCH";
+        } else {
+            URL = API.Urls.Diary.p("all");
+            method = "POST";
         }
 
         let body: API.Post = {
@@ -72,13 +75,13 @@ export default class EditPost extends BaseComponent<EditPostProps, EditPostState
     }
 
     fetchWriters() {
-        this.download("writer list", "/api/writers").then((res: API.RespWriterList) => {
+        this.download("writer list", API.Urls.Writers.p("listall")).then((res: API.RespWriterList) => {
             this.setState({ writerList: res });
         });
     }
 
     fetchPost(id: string) {
-        this.download("post data", `/api/diary/${id}`)
+        this.download("post data", API.Urls.Diary.p("post", id))
             .then((res: API.RespPost) => {
                 this.setState({
                     postContent: res.text,

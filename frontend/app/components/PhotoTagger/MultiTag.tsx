@@ -36,7 +36,7 @@ export default class MultiTag extends BaseComponent<IMultiTagProps, IMultiTagSta
     }
 
     fetchTagList() {
-        this.download("taglist", `/api/photos/tags`)
+        this.download("taglist", API.Urls.Tags.p("taglist"))
             .then((res: API.RespTagList) => {
                 let map = new Map<string, API.PhotoTag>();
                 res.forEach(itm => map.set(itm._id, itm));
@@ -46,7 +46,7 @@ export default class MultiTag extends BaseComponent<IMultiTagProps, IMultiTagSta
     }
 
     fetchPhotoList(dir: string) {
-        this.download("photo list", `/api/photos/photos/${dir}?full=true`)
+        this.download("photo list", API.Urls.Photos.q("photosdir", {full: true}, dir)) // `/api/photos/photos/${dir}?full=true`)
         .then( (res: API.RespPhotoListFull) => {
             let map = new Map<string, API.Photo>();
             res.forEach(itm => map.set(itm._id, itm));
@@ -99,7 +99,7 @@ export default class MultiTag extends BaseComponent<IMultiTagProps, IMultiTagSta
     updatePhotoTags() {
         let ch = this.createUpdateRequest();
 
-        this.download("updating tags", "/api/photos/multitag", "PATCH", ch);
+        this.download("updating tags", API.Urls.Photos.p("multitag"), "PATCH", ch);
     }
 
     componentDidMount() {
@@ -164,7 +164,7 @@ export default class MultiTag extends BaseComponent<IMultiTagProps, IMultiTagSta
         }
 
         return <div class={`imgcheck ${cls}`} onClick={this.makeChange.bind(this, photo._id)}>
-		    <label for={photo._id}><img src={`/api/photos/photo/${photo._id}/thumb`} width='175' alt={photo.comment} title={photo.comment} /></label>
+		    <label for={photo._id}><img src={API.Urls.Photos.p("thumbnail", photo._id)} width='175' alt={photo.comment} title={photo.comment} /></label>
 		</div>
 
     }

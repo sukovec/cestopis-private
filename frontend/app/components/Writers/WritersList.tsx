@@ -27,7 +27,7 @@ export default class WritersList extends BaseComponent<IWritersListProps, IWrite
     }
 
     fetchWriters() {
-        this.download("writers", `/api/writers`)
+        this.download("writers", API.Urls.Writers.p("listall"))
         .then((res: API.RespWriterList) => {
             this.setState({ list: res })
         });

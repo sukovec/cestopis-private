@@ -31,7 +31,7 @@ export default class Configuration extends BaseComponent<IConfigurationProps, IC
         let body: API.Configuration = {
             firstDay: this.state.firstDay
         };
-        this.download("updating configuration", "/api/misc/config", "PATCH", body)
+        this.download("updating configuration", API.Urls.Misc.p("config"), "PATCH", body)
         .then ( () => {
             this.displayMessage("Config updated", "The configuration was updated successfully");
         });
@@ -43,17 +43,17 @@ export default class Configuration extends BaseComponent<IConfigurationProps, IC
     }
 
     componentDidMount() {
-        this.download("configuration", "/api/misc/config")
+        this.download("configuration", API.Urls.Misc.p("config"))
         .then( (res: API.Configuration) => {
             this.setState( {firstDay: res.firstDay});
         });
 
-        this.download("user configuration", "/api/user/config")
+        this.download("user configuration", API.Urls.Users.p("config"))
         .then( (res: API.UserConfig) => {
             this.setState( {usrAssocWriterId: res.assocWriterId});
         });
 
-        this.download("writer list", "/api/writers")
+        this.download("writer list", API.Urls.Writers.p("listall"))
         .then( (res: API.Writer[]) => {
             this.setState( {writerList: res} );
         });

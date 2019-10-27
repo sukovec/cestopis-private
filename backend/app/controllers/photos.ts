@@ -75,6 +75,7 @@ export class PhotosController {
                 let file = path.join(CFG.thumbPath, itm.folder, itm.thumb);
                 resp.sendFile(file);
             });
+        return new Promise((res, rej) => {});
     }
 
     @httpGet(API.Urls.Photos.original)

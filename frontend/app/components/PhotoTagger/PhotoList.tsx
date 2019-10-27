@@ -23,7 +23,7 @@ export default class PhotoTaggerPhotolist extends BaseComponent<PhotoListProps, 
     }
 
     fetchPhotoList(dir: string) {
-        this.download("photo list", `/api/photos/photos/${dir}`)
+        this.download("photo list", API.Urls.Photos.p("photosdir", dir)) 
             .then((res: API.RespPhotoListSimple) => {
                 this.setState({ photolist: res })
             });
@@ -50,7 +50,7 @@ export default class PhotoTaggerPhotolist extends BaseComponent<PhotoListProps, 
             <a href="/photos/">Directory list</a>
             <ul>
                 {photolist.map(itm =>
-                    <a href={`/photos/tag/${itm}`}><img src={`/api/photos/photo/${itm}/thumb`} width={256} /></a>
+                    <a href={`/photos/tag/${itm}`}><img src={API.Urls.Photos.p("thumbnail", itm)} width={256} /></a>
                 )
                 }
             </ul>

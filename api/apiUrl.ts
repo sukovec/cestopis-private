@@ -1,10 +1,27 @@
-const prefix = "/api";
+const urlRoot = "/api";
+
+type UrlPart = string | number | boolean;
+type KeyVal = {[key: string]: UrlPart};
 
 export default abstract class ApiUrl {
     protected abstract readonly _root: string;
     private static readonly argregex = /:[a-zA-Z0-9]*/g;
 
-    private replaceArray(path: string, args: string[]): string {
+    public r(): string {
+        return urlRoot + this._root;
+    }
+
+    private createQueryString(query: KeyVal): string {
+        return "?" + Object.keys(query)
+            .filter(itm => query.hasOwnProperty(itm))
+            .map( (key) => {
+                let val = query[key];
+                return encodeURIComponent(key) + "=" + encodeURIComponent(val);
+            })
+            .join("&");
+    }
+
+    private replaceArray(path: string, args: UrlPart[]): string {
         let mt = path.match(ApiUrl.argregex);
         if (!mt) {
             if (args.length > 0)
@@ -26,7 +43,7 @@ export default abstract class ApiUrl {
         return this.replaceObject(path, argsobj);
     }
 
-    private replaceObject(path: string, args: {[name: string]: string}): string {
+    private replaceObject(path: string, args: KeyVal): string {
         return path.replace(ApiUrl.argregex, (match, contents, offset, input_string) => {
             let toget = match.substr(1);
             if (!args.hasOwnProperty(toget)) {
@@ -35,12 +52,12 @@ export default abstract class ApiUrl {
                 console.log(args);
                 throw new Error(`Cannot generate API call path, argument ${toget} missing`);
             }
-            return args[toget];
+            return String(args[toget]);
         });
     }
 
-    public p(path: keyof this, ...rest: string[] | number[]): string;
-    public p(path: keyof this, params?: {[name: string]: string | number}): string;
+    public p(path: keyof this, ...rest: UrlPart[]): string;
+    public p(path: keyof this, params?: KeyVal): string;
     public p(path: keyof this): string
     {
         let pth = this[path] as unknown as string; 
@@ -54,7 +71,25 @@ export default abstract class ApiUrl {
         return this.r() + this.replaceArray(pth, restargs);   
     }
 
-    public r(): string {
-        return prefix + this._root;
+    // right now, I don't have better idea, how to implement this and don't repeat most of code
+    // TODO: If somehow possible, implement checking query params
+    /**
+     * Create path defined in ApiUrl object named @param path with query string parameters
+     * @param path Path name as defined in ApiUrl object
+     * @param query Key-value of query parameters
+     * @param rest Replace :names in defined path
+     */
+    public q(path: keyof this, query: KeyVal, ...rest: UrlPart[]): string;
+    public q(path: keyof this, query: KeyVal, params?: KeyVal): string;
+    public q(path: keyof this, query: KeyVal): string {
+        let pth = this[path] as unknown as string; 
+        if (typeof arguments[2] === "object")
+            return this.r() + this.replaceObject(pth, arguments[1]) + this.createQueryString(query);
+
+        let restargs = [];
+        for (var i = 0; i < arguments.length - 2; i++) 
+            restargs[i] = arguments[i + 2];       
+        
+        return this.r() + this.replaceArray(pth, restargs) + this.createQueryString(query);   
     }
 }

@@ -31,7 +31,7 @@ export class DiaryController {
     }
 
     @httpGet(API.Urls.Diary.post)
-    public getAPost(@requestParam("postId") id: string): Promise<API.APIResponse<API.RespPost>> {
+    public getAPost(@requestParam("id") id: string): Promise<API.APIResponse<API.RespPost>> {
         return this.drsr.getPostById(id)
         .then( (res) => {
             return {

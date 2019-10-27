@@ -7,7 +7,7 @@ import * as API from "../api/main";
 
 let provideSingleton = function (identifier: any) { return fluentProvide(identifier).inSingletonScope().done(); };
 
-@provideSingleton(TYPES.PhotoService)
+@provideSingleton(TYPES.TagService)
 export default class TagService {
     constructor(@inject(TYPES.database) private database: db) {
 

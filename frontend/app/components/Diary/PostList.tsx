@@ -46,7 +46,7 @@ export default class PostList extends BaseComponent<PostListProps, IPostListStat
     }
 
     deletePostStep2() {
-        this.download("deleting post", `/api/diary/${this.state.postToDelete._id}`, "DELETE")
+        this.download("deleting post", API.Urls.Diary.p("post", this.state.postToDelete._id), "DELETE")
         .then( (res: void) => {
             this.setState({ postToDelete: null });
             this.fetchPosts();
@@ -54,7 +54,7 @@ export default class PostList extends BaseComponent<PostListProps, IPostListStat
     }
 
     fetchWriters() {
-        this.download("writers", "/api/writers")
+        this.download("writers", API.Urls.Writers.p("listall"))
             .then((res: API.RespWriterList) => {
                 let hmap = res.reduce((prev, cur) => {
                     prev[cur._id] = cur;
@@ -65,7 +65,7 @@ export default class PostList extends BaseComponent<PostListProps, IPostListStat
     }
 
     fetchPosts() {
-        this.download("posts", "/api/diary")
+        this.download("posts", API.Urls.Diary.p("all"))
             .then((res: API.RespPostList) => {
                 this.setState({ postlist: res })
             });

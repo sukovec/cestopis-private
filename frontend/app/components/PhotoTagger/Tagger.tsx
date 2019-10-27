@@ -41,7 +41,7 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
 
     fetchMetadata(photoId: string) {
         // fetch photo metadata
-        this.download("photo metadata", `api/photos/photo/${photoId}/info/`)
+        this.download("photo metadata", API.Urls.Photos.p("metadata", photoId))
             .then((res: API.RespPhotoInfo) => {
                 this.setState({
                     comment: res.comment,
@@ -52,7 +52,7 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
     }
 
     fetchAround(photoId: string) {
-        this.download("prev/next photos", `/api/photos/photo/${photoId}/around`)
+        this.download("prev/next photos", API.Urls.Photos.p("around", photoId))
             .then((res: API.RespPhotoAround) => {
                 this.setState({
                     nextId: res.next,
@@ -62,7 +62,7 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
     }
 
     fetchTags() {
-        this.download("taglist", `/api/photos/tags`)
+        this.download("taglist", API.Urls.Tags.p("taglist"))
             .then((res: API.RespTagList) => {
                 this.setState({ tagList: res })
             })
@@ -86,7 +86,7 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
             tags: this.state.tags
         };
 
-        this.download("updating photo metadata", `/api/photos/photo/${this.props.photoId}/info`, "POST", body)
+        this.download("updating photo metadata", API.Urls.Photos.p("metadata", this.props.photoId), "PATCH", body)
             .then((res: void) => {
                 if (this.state.nextId)
                     route(`/photos/tag/${this.state.nextId}`);
@@ -131,7 +131,7 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
                 <input type="text" value={comment} onInput={this.onCommentChange} />
                 <input type='submit' value='yeah' onClick={this.saveAndProceed} />
             </div>
-            <img src={`/api/photos/photo/${this.props.photoId}/thumb`} />
+            <img src={API.Urls.Photos.p("thumbnail", this.props.photoId)} />
 
             <div class="navig">
                 {prev}

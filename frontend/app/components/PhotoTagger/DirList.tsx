@@ -31,7 +31,7 @@ export default class DirList extends BaseComponent<DirListProps, DirListStats> {
     }
 
     fetchDirlist() {
-        this.download("directory list", "/api/photos/dirs")
+        this.download("directory list", API.Urls.Photos.p("dirlist"))
             .then((res: API.RespPhotoDirlist) => {
                 this.setState({ dirlist: res })
             });

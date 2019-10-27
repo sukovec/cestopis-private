@@ -30,7 +30,7 @@ import "./controllers/photos";
 import "./controllers/diary";
 import "./controllers/writers";
 import "./controllers/user";
-import "./controller/tags";
+import "./controllers/tags";
 import "./controllers/misc";
 
 // middleware:
