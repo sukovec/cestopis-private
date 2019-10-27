@@ -17,7 +17,7 @@ import CFG from "../const/config";
 import TYPES from "../const/types";
 import PhotoService from "../services/srvphotos";
 
-import * as API from "../common/ifaces";
+import * as API from "../api/ifaces";
 
 @controller('/api/photos', TYPES.NeedLogin)
 export class PhotosController {

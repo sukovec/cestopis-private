@@ -12,7 +12,7 @@ import { inject } from "inversify";
 import TYPES from "../const/types";
 import PhotoService from "../services/srvphotos";
 
-import * as API from "../common/ifaces";
+import * as API from "../api/ifaces";
 import TagService from '../services/tagService';
 
 @controller('/api/tags', TYPES.NeedLogin)

@@ -6,7 +6,7 @@ import "../styles/css.css"
 import 'preact-material-components/style.css';
 
 import * as X from "../iface";
-import * as API from "../common/ifaces";
+import * as API from "../api/ifaces";
 import { HIValue } from "../lib/onchange";
 
 import BaseComponent from "./BaseComponent";

@@ -1,6 +1,6 @@
 import * as express from "express";
 
-import * as API from "../common/ifaces";
+import * as API from "../api/ifaces";
 
 export default function errorMiddleware(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
     console.error(`ERROR 500 on ${req.url}`);

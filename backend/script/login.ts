@@ -1,7 +1,7 @@
 import fetchOrig from "node-fetch";
 import * as crypto from "crypto";
 import CFG from "../app/const/config";
-import * as API from "../app/common/ifaces";
+import * as API from "../app/api/ifaces";
 import { TextEncoder } from "util";
 
 export const fetch = require("fetch-cookie")(fetchOrig) as typeof fetchOrig; // oink

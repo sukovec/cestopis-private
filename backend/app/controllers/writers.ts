@@ -4,7 +4,7 @@ import { inject } from "inversify";
 import TYPES from "../const/types";
 import ServiceWriters from "../services/serviceWriters";
 
-import * as API from "../common/ifaces";
+import * as API from "../api/ifaces";
 
 @controller('/api/writers', TYPES.NeedLogin)
 export class WritersController {

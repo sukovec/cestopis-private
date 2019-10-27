@@ -8,7 +8,7 @@ import Button from "preact-material-components/Button";
 import BaseComponent from "./BaseComponent";
 import WriterSelect from "./Writers/WriterSelect";
 
-import * as API from "../common/ifaces";
+import * as API from "../api/ifaces";
 import { HIValue } from "../lib/onchange";
 import { IDefProps, IDefState } from "../iface";
 

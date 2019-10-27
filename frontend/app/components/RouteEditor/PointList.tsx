@@ -4,7 +4,8 @@ import List from "preact-material-components/List";
 import Button from "preact-material-components/Button";
 
 import { IDefProps } from "../../iface";
-import * as API from "../../common/ifaces";
+import * as API from "../../api/ifaces";
+
 
 export interface PointListProps extends IDefProps {
     points: API.RoutePoint[];

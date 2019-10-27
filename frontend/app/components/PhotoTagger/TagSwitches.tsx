@@ -4,7 +4,8 @@ import { LeafletMouseEvent } from "leaflet";
 
 // components
 import { IDefProps } from "../../iface";
-import * as API from "../../common/ifaces";
+import * as API from "../../api/ifaces";
+
 
 import TagSwitch from "./TagSwitch";
 

@@ -3,7 +3,8 @@ import FormField from "preact-material-components/FormField";
 import Radio from "preact-material-components/Radio";
 
 import { IDefProps } from "../../iface";
-import * as API from "../../common/ifaces";
+import * as API from "../../api/ifaces";
+
 
 interface IWriterSelectProps extends IDefProps {
     onChange: JSX.EventHandler<Event>;

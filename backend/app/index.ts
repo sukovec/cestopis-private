@@ -13,7 +13,7 @@ import { buildProviderModule } from "inversify-binding-decorators";
 
 
 import CFG from "./const/config";
-import * as API from "./common/ifaces";
+import * as API from "./api/ifaces";
 
 // support
 import "./services/db"

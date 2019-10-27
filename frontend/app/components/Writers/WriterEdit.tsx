@@ -7,7 +7,8 @@ import TextField from "preact-material-components/TextField";
 import BaseComponent from "../BaseComponent";
 
 import { IDefProps, IDefState } from "../../iface";
-import * as API from "../../common/ifaces";
+import * as API from "../../api/ifaces";
+
 import { HIValue } from "../../lib/onchange";
 
 interface IWriterEditProps extends IDefProps {

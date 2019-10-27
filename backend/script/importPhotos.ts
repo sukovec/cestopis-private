@@ -11,7 +11,7 @@ const exifproc = new exif.ExiftoolProcess();
 import "reflect-metadata";
 
 import CFG from "../app/const/config";
-import * as API from "../app/common/ifaces";
+import * as API from "../app/api/ifaces";
 import db from "../app/services/db";
 
 // for this it's necessarry to comment lines 5 and 7 (if not changed since this commit) in db.ts file

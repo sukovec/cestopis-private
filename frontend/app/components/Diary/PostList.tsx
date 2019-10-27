@@ -10,7 +10,8 @@ import BaseComponent from "../BaseComponent";
 import Dialog from "../Dialog";
 
 import { IDefProps, IDefState } from "../../iface";
-import * as API from "../../common/ifaces";
+import * as API from "../../api/ifaces";
+
 
 interface PostListProps extends IDefProps {
 }

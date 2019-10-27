@@ -5,7 +5,8 @@ import Radio from "preact-material-components/Radio";
 // components
 import { HIValue } from "../../lib/onchange";
 import { IDefProps, IDefState } from "../../iface";
-import * as API from "../../common/ifaces";
+import * as API from "../../api/ifaces";
+
 
 // components
 import BaseComponent from "../BaseComponent";

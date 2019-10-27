@@ -5,7 +5,7 @@ import { IDefProps } from "../../iface";
 import * as L from "leaflet"
 import layers from "../../const/maplayers";
 
-import { RoutePoint, RoutePointMode, LatLng } from "../../common/ifaces";
+import { RoutePoint, RoutePointMode, LatLng } from "../../api/ifaces";
 
 interface MapProps extends IDefProps {
     //view: [ number, number];

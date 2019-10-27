@@ -12,7 +12,8 @@ import { IDefProps } from "../../iface";
 import Map from "./Map";
 import RoutePointList from "./PointList";
 
-import * as API from "../../common/ifaces";
+import * as API from "../../api/ifaces";
+
 
 interface EditProps extends IDefProps {
     createNew: boolean;
