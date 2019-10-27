@@ -4,7 +4,7 @@ import * as express from "express";
 
 import TYPES from "../const/types";
 
-import * as API from "../api/ifaces";
+import * as API from "../api/main";
 import UserService from '../services/user';
 
 @controller('/api/user')

@@ -4,7 +4,7 @@ import BaseComponent from "../BaseComponent";
 import { IDefState, IDefProps } from "../../iface";
 import Button from "preact-material-components/Button";
 
-import * as API from "../../api/ifaces";
+import * as API from "../../api/main";
 
 
 interface IMultiTagProps extends IDefProps {

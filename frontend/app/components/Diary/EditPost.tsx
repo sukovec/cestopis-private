@@ -13,7 +13,7 @@ import Button from "preact-material-components/Button";
 import WriterSelect from "../Writers/WriterSelect";
 
 import { IDefProps, IDefState } from "../../iface";
-import * as API from "../../api/ifaces";
+import * as API from "../../api/main";
 
 import { HIValue } from "../../lib/onchange";
 

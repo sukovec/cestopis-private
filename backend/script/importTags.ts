@@ -1,7 +1,7 @@
 throw new Error("There is no reason to use this anymore");
 
 
-import * as API from "../app/api/ifaces";
+import * as API from "../app/api/main";
 import db from "../app/services/db";
 
 import * as fs from "fs";

@@ -7,7 +7,7 @@ const exif = require("node-exiftool");
 const exifproc = new exif.ExiftoolProcess();
 
 import CFG from "../app/const/config";
-import * as API from "../app/api/ifaces";
+import * as API from "../app/api/main";
 
 import { login, fetch } from "./login";
 

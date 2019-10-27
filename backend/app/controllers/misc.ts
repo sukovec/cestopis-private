@@ -3,7 +3,7 @@ import { inject } from "inversify";
 
 import TYPES from "../const/types";
 
-import * as API from "../api/ifaces";
+import * as API from "../api/main";
 import MiscService from "../services/misc";
 
 @controller('/api/misc', TYPES.NeedLogin)

@@ -1,5 +1,5 @@
 import * as X from "../iface";
-import * as API from "../api/ifaces";
+import * as API from "../api/main";
 import Dialog from "./Dialog";
 import Button from "preact-material-components/Button";
 import { h, Component, VNode } from "preact";

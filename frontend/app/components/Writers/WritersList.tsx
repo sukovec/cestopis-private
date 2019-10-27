@@ -6,7 +6,7 @@ import List from "preact-material-components/List";
 import BaseComponent from "../BaseComponent";
 
 import { IDefProps, IDefState } from "../../iface";
-import * as API from "../../api/ifaces";
+import * as API from "../../api/main";
 
 
 

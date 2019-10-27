@@ -1,6 +1,6 @@
 import { h, render, Component } from "preact";
 import { IDefProps } from "../../iface";
-import * as API from "../../api/ifaces";
+import * as API from "../../api/main";
 
 
 interface TagswitchProps extends IDefProps {

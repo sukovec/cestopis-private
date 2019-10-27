@@ -3,7 +3,7 @@ import { inject } from "inversify"
 import TYPES from "../const/types";
 import db from "../services/db";
 
-import * as API from "../api/ifaces";
+import * as API from "../api/main";
 import fetch from "node-fetch";
 
 @controller('/api/routes', TYPES.NeedLogin)

@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 
 import { IDefProps, IDefState } from "../../iface";
-import * as API from "../../api/ifaces";
+import * as API from "../../api/main";
 
 
 import BaseComponent from "../BaseComponent";

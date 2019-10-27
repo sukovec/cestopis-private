@@ -5,7 +5,7 @@ import * as express from "express";
 
 import TYPES from "../const/types";
 import CFG from "../const/config";
-import * as API from "../api/ifaces";
+import * as API from "../api/main";
 
 function isLocalhost(req: express.Request) {
     const LOCALHOST = ["127.0.0.1", "::1"];

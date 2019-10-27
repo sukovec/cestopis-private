@@ -3,7 +3,7 @@ import FormField from "preact-material-components/FormField";
 import Radio from "preact-material-components/Radio";
 
 import { IDefProps } from "../../iface";
-import * as API from "../../api/ifaces";
+import * as API from "../../api/main";
 
 
 interface IWriterSelectProps extends IDefProps {
