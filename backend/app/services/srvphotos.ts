@@ -102,6 +102,42 @@ export default class PhotoService {
         });
     }
 
+    private makeModifierObject(prefix: string, set: { [key: string]: any }) {
+        let retObj: any = {};
+        Object.keys(set)
+            .filter(itm => set.hasOwnProperty(itm))
+            .forEach((itm) => {
+                retObj[prefix + itm] = set[itm];
+            });
+
+        return retObj;
+    }
+
+    public updatePhotoTags(id: string, add: API.PhotoTagset, remove: API.PhotoTagset, change: API.PhotoTagset): Promise<void> {
+        let rquest: any = {};
+        if (add) {
+            rquest.$set = this.makeModifierObject("tags.", add);
+        }
+
+        if (remove) {
+            rquest.$unset = this.makeModifierObject("tags.", remove);
+        }
+
+        // probably mere add and change right in the request
+        if (change) {
+            if (!rquest.$set) rquest.$set = {};
+            Object.assign(rquest.$set, this.makeModifierObject("tags.", change));
+        }
+
+        return new Promise((res, rej) => {
+            this.database.photos.update({ _id: id }, rquest, {}, (err, nou) => {
+                if (err) return rej(err);
+                if (nou != 1) return rej(new Error("No document was updated"));
+                res();
+            });
+        });
+    }
+
     public getPreviousPhoto(date: number, folder: string): Promise<API.Photo> {
         return new Promise((res, rej) => {
             this.database.photos.find({ folder: folder, date: { $lt: date } }).sort({ date: -1 }).limit(1).exec((err: any, docum: any) => {

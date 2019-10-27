@@ -1,5 +1,5 @@
 import { h } from "preact";
-
+import { route } from "preact-router";
 import BaseComponent from "../BaseComponent";
 import { IDefState, IDefProps } from "../../iface";
 import Button from "preact-material-components/Button";
@@ -99,7 +99,10 @@ export default class MultiTag extends BaseComponent<IMultiTagProps, IMultiTagSta
     updatePhotoTags() {
         let ch = this.createUpdateRequest();
 
-        this.download("updating tags", API.Urls.Photos.p("multitag"), "PATCH", ch);
+        this.download("updating tags", API.Urls.Photos.p("multitag"), "PATCH", ch)
+        .then( (res) => {
+            this.displayMessage("Successfull", "Tags has been updated sucessfully", () => route("/photos"));
+        })
     }
 
     componentDidMount() {
@@ -138,7 +141,11 @@ export default class MultiTag extends BaseComponent<IMultiTagProps, IMultiTagSta
     }
 
     renderTagList() {
-        return <div>{this.state.tagList.map(itm => this.renderTag(itm))}</div>
+        return <div>
+            <h1>MultiTag '{this.props.dir}'</h1>
+
+            {this.state.tagList.map(itm => this.renderTag(itm))}
+        </div>
     }
 
     renderPhoto(photo: API.Photo, selTag: API.PhotoTag) {
@@ -178,7 +185,7 @@ export default class MultiTag extends BaseComponent<IMultiTagProps, IMultiTagSta
             tagto += "/" + this.props.subtag;
 
         return <div>
-            <h1>MultiTag to {tagto}</h1>
+            <h1>MultiTag '{this.props.dir}' to {tagto}</h1>
             <div><Button onClick={this.updatePhotoTags}>MULTI TAG!</Button></div>
             {this.state.photoList.map(itm => this.renderPhoto(itm, selTag))}
             <div><Button onClick={this.updatePhotoTags}>MULTI TAG!</Button></div>

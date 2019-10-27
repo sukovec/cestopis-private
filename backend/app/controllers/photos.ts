@@ -120,11 +120,20 @@ export class PhotosController {
     }
 
     @httpPatch(API.Urls.Photos.multitag)
-    public async multitag(): Promise<API.APIResponse<void>> {
-        return {
-            result: API.APIResponseResult.OK,
-            data: null
-        };
+    public async multitag(@requestBody() body: API.MultiTagRequest): Promise<API.APIResponse<void>> {
+        console.log(body);
+        let prms = Object.keys(body)
+            .filter(itm => body.hasOwnProperty(itm))
+            .map( (itm) => {
+                return this.photosrv.updatePhotoTags(itm, body[itm].add, body[itm].remove, body[itm].change);
+            });
+        
+        return Promise.all(prms).then( (res) => {
+            return {
+                result: API.APIResponseResult.OK,
+                data: null
+            };
+        });
     }
 
     // ADMIN-LOCALHOST ONLY ENDPOINTS

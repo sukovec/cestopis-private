@@ -1,4 +1,5 @@
 1. nemazat uz znova todofile aneb naucit se pouzivat git reset
 2. Namrskat config do envfilu https://medium.com/the-node-js-collection/making-your-node-js-work-everywhere-with-environment-variables-2da8cdf6e786
 3. Pouzit nejakou formu validace prijatych JSONu
-
+4. API.Urls trosku rozsirit, aby to umelo poskytovat i nejaky info ohledne pouzivanych HTTP metod
+5. Prejmenovat soubory backendu, at to trosku dava smysl a je to konzistentni
