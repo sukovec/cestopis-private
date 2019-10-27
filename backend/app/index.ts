@@ -18,6 +18,7 @@ import * as API from "./common/ifaces";
 // support
 import "./services/db"
 import "./services/srvphotos";
+import "./services/tagService";
 import "./services/serviceWriters";
 import "./services/serviceDiary";
 import "./services/user";
@@ -29,6 +30,7 @@ import "./controllers/photos";
 import "./controllers/diary";
 import "./controllers/writers";
 import "./controllers/user";
+import "./controller/tags";
 import "./controllers/misc";
 
 // middleware:

@@ -1,6 +1,8 @@
 enum TYPES {
 	database = "database",
+
 	PhotoService = "photoservice",
+	TagService = "tagservice",
 	WritersService = "writerservice",
 	DiaryService = "diaries",
 	UserService = "authoservi",
