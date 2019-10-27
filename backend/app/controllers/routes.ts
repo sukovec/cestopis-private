@@ -6,6 +6,8 @@ import db from "../services/db";
 import * as API from "../api/main";
 import fetch from "node-fetch";
 
+ // TODO: Rewrite it for new API.Urls
+
 @controller('/api/routes', TYPES.NeedLogin)
 export class RouteController {
 	constructor(@inject(TYPES.database) private database: db) {

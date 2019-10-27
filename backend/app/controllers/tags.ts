@@ -21,7 +21,7 @@ export class TagsController {
 
     }
 
-    @httpGet("/dirs")
+    @httpGet("/")
     public getTagList(): Promise<API.APIResponse<API.RespTagList>> {
         return this.tagsrv.getTagList()
             .then((list) => {

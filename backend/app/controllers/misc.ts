@@ -6,13 +6,13 @@ import TYPES from "../const/types";
 import * as API from "../api/main";
 import MiscService from "../services/misc";
 
-@controller('/api/misc', TYPES.NeedLogin)
+@controller(API.Urls.Misc.r(), TYPES.NeedLogin)
 export class MiscController {
     constructor(@inject(TYPES.MiscService) private misc: MiscService) {
 
     }
 
-    @httpGet("/config")
+    @httpGet(API.Urls.Misc.config)
     public getConfig(): Promise<API.APIResponse<API.RespConfiguration>> {
         return this.misc.getConfiguration()
         .then( (cfg) => {
@@ -30,7 +30,7 @@ export class MiscController {
         });
     }
 
-    @httpPatch("/config")
+    @httpPatch(API.Urls.Misc.config)
     public updateConfig(@requestBody() body: API.Configuration): Promise<API.APIResponse<void>> {
         return this.misc.setConfiguration(body)
         .then( () => {

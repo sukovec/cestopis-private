@@ -1,10 +1,8 @@
+const prefix = "/api";
+
 export default abstract class ApiUrl {
     protected abstract readonly _root: string;
     private static readonly argregex = /:[a-zA-Z0-9]*/g;
-
-    public getRoot(): string {
-        return this._root;
-    }
 
     private replaceArray(path: string, args: string[]): string {
         let mt = path.match(ApiUrl.argregex);
@@ -47,12 +45,16 @@ export default abstract class ApiUrl {
     {
         let pth = this[path] as unknown as string; 
         if (typeof arguments[1] === "object")
-            return this._root + this.replaceObject(pth, arguments[1]);
+            return this.r() + this.replaceObject(pth, arguments[1]);
 
         let restargs = [];
         for (var i = 0; i < arguments.length - 1; i++) 
             restargs[i] = arguments[i + 1];       
         
-        return this._root + this.replaceArray(pth, restargs);   
+        return this.r() + this.replaceArray(pth, restargs);   
+    }
+
+    public r(): string {
+        return prefix + this._root;
     }
 }
