@@ -46,7 +46,7 @@ export default class RouteEdit extends BaseComponent<IRouteListProps, IRouteList
     }
 
     removeRouteStep2() {
-        this.download("deleting route", API.Urls.Routes.p("actual", this.state.routeToDelete._id), "DELETE")
+        this.download("deleting route", API.Urls.Routes.p("specific", this.state.routeToDelete._id), "DELETE")
             .then((res: void) => {
                 this.setState({ routeToDelete: null });
                 this.fetchRoutes();

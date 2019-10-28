@@ -66,7 +66,7 @@ server.setErrorConfig((app) => {
 		res.status(404);
 		res.send({ result: API.APIResponseResult.Fail, resultDetail: "!notfound", });
 
-		console.log(`ERROR 404: ${req.url}`);
+		console.log(`ERROR 404: ${req.method} ${req.url}`);
 	});
 	app.use(ErrorMW);
 });

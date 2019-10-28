@@ -10,16 +10,15 @@ import RouteEdit from "./RouteEditor/Edit";
 import RouteList from "./RouteEditor/RouteList";
 
 export interface RouteEditorProps extends IDefProps {
-	action?: string;
+	id?: string;
 }
 
 export default function RouteEditor(props: RouteEditorProps) {
-	let ret;
-	if (props.action === "") {
+	if (props.id === "") {
 		return <RouteList />
-	} else if (props.action === "create") {
+	} else if (props.id === "create") {
 		return <RouteEdit />
 	} else {
-		return <RouteEdit idRoute={props.action} />
+		return <RouteEdit idRoute={props.id} />
 	} 
 }

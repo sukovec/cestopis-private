@@ -46,6 +46,17 @@ export default class RouteService {
 		});
     }
 
+    removeRoute(id: string): Promise<void> {
+        return new Promise((res, rej) => {
+			this.database.routes.remove({_id: id}, (err: any, afc: number) => {
+                if (err) return rej(err);
+                if (afc != 1) return rej(new Error(`Route with id '${id}' was not removed`));
+				res();
+			})
+		});
+
+    }
+
     createNewRoute(route: API.SavedRoute): Promise<string> {
         return new Promise((res, rej) => {
 			this.database.routes.insert(route, (err, doc) => {

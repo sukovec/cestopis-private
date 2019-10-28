@@ -1,4 +1,4 @@
-import { controller, httpGet, requestBody, httpPost } from 'inversify-express-utils';
+import { controller, httpGet, requestBody, httpPost, httpDelete, requestParam } from 'inversify-express-utils';
 import { inject } from "inversify"
 import TYPES from "../const/types";
 
@@ -44,5 +44,16 @@ export class RouteController {
 					data: res
 				};
 			});
+	}
+
+	@httpDelete(API.Urls.Routes.specific)
+	public removeRoute(@requestParam("idRoute") idRoute: string): Promise<API.APIResponse<void>> {
+		return this.routsrv.removeRoute(idRoute)
+		.then( (res) => {
+			return {
+				result: API.APIResponseResult.OK,
+				data: undefined
+			};
+		});
 	}
 }
