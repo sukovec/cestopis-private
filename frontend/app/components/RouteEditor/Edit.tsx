@@ -1,4 +1,4 @@
-import { h, render, Component } from "preact";
+import { h } from "preact";
 import { route } from "preact-router";
 import { LeafletMouseEvent } from "leaflet";
 
@@ -8,50 +8,53 @@ import Button from 'preact-material-components/Button';
 import TextField from "preact-material-components/TextField";
 import Select from "preact-material-components/Select";
 
-import { IDefProps } from "../../iface";
+import { IDefProps, IDefState } from "../../iface";
+import { HIValue, HIChecked } from "../../lib/onchange";
+
+import BaseComponent from "../BaseComponent";
 import Map from "./Map";
 import RoutePointList from "./PointList";
 
 import * as API from "../../api/main";
 
+enum WorkingMode {
+    newPoint, insertBetween, noOp
+}
 
-interface EditProps extends IDefProps {
-    createNew: boolean;
+interface IRouteEditProps extends IDefProps {
     idRoute?: string;
 }
 
-interface EditStat {
-    routePoints: API.RoutePoint[];
-    txDetail: string;
-    transportType: string;
+interface IRouteEditState extends IDefState {
+    // properties of SavedRoute
+    routeVersion: number;
+    dayTaken: string;
+    descript: string;
     comment: string;
+    transportType: API.RouteTransportMethod;
+    routePoints: API.RoutePoint[];
+
+    // for working component
+    workMode: WorkingMode;
+    pointRouting: boolean;
 }
 
-export default class RouteEdit extends Component<EditProps, EditStat> {
-    private route: boolean;
-
-    constructor() {
-        super();
+export default class RouteEdit extends BaseComponent<IRouteEditProps, IRouteEditState> {
+    constructor(p: IRouteEditProps, ctx: any) {
+        super(p, ctx);
         this.state = {
+            routeVersion: 0,
+            dayTaken: "",
+            descript: "",
+            comment: "",
+            transportType: API.RouteTransportMethod.walk,
             routePoints: [],
-            txDetail: "",
-            transportType: "hitch",
-            comment: ""
+            pointRouting: false,
+            workMode: WorkingMode.noOp
         };
-
-        this.mapClick = this.mapClick.bind(this);
-        this.routeSwitchChanged = this.routeSwitchChanged.bind(this);
-        this.removePointClicked = this.removePointClicked.bind(this);
-        this.detailOnInput = this.detailOnInput.bind(this);
-        this.commentChanged = this.commentChanged.bind(this);
-        this.transportChange = this.transportChange.bind(this);
-        this.savedata = this.savedata.bind(this);
-        this.route = false;
     }
 
-    ////////////////////
-    /* EVENT HANDLERS */
-    ////////////////////
+    /*
     mapClick(evt: LeafletMouseEvent) {
         let newPoint: API.RoutePoint = {
             mode: this.route ? API.RoutePointMode.Routed : API.RoutePointMode.ByHand,
@@ -90,68 +93,118 @@ export default class RouteEdit extends Component<EditProps, EditStat> {
                 }
             });
         }
+    }*/
+
+    fetchRoute(id: string) {
+        this.download("route data", API.Urls.Routes.p("specific", id))
+        .then( (res: API.SavedRoute) => {
+            this.setState({
+                comment: res.comment,
+                dayTaken: res.dayTaken,
+                descript: res.descript,
+                routePoints: res.routePoints,
+                transportType: res.transportType
+            });
+        } );
     }
 
-    savedata() {
-        fetch("/api/routes/route", { 
-            method: "POST",
-            cache: "no-cache",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(this.state)
-        }).then( (res) => { 
-            return res.json();
-        }).then( (res: API.APIResponse<API.RespID>) => {
-            route(`/routes/edit/${res.data}`);
-        });
+    saveData() {
+        let body = {
+            comment: this.state.comment,
+            dayTaken: this.state.dayTaken,
+            descript: this.state.descript,
+            routePoints: this.state.routePoints,
+            transportType: this.state.transportType
+        };
+
+        let URL: string;
+        let method: string;
+
+        if (this.props.idRoute) {
+            URL = API.Urls.Routes.p("specific", this.props.idRoute);
+            method = "PATCH";
+        } else {
+            URL = API.Urls.Routes.p("all");
+            method = "POST";
+        }
+
+        this.download("saving route data", URL, method, body)
+        .then( (res: API.RespID) => {
+            if (res)
+                route(`/routes/${res}`);
+            
+            this.displayMessage(this.props.idRoute ? "Updated" : "Created", "Operation has finished successfully");
+        } );
     }
 
-    routeSwitchChanged(evt: any) {
-        console.log(evt.srcElement.checked);
-        this.route = evt.srcElement.checked;
+    componentDidMount() {
+        this.componentDidUpdate({"idRoute": ""});
     }
 
-    removePointClicked(idx: number) {
-        this.setState((oldstate) => {
-            return {
-                routePoints: [...oldstate.routePoints.slice(0, idx), ...oldstate.routePoints.slice(idx + 1)]
-            }
-        });
+    componentDidUpdate(oldProps: IRouteEditProps) {
+        if (oldProps.idRoute != this.props.idRoute && this.props.idRoute) {
+            this.fetchRoute(this.props.idRoute);
+        }
     }
 
-    detailOnInput(e: any) {
-        this.setState({ txDetail: e.target.value });
+
+    mapClick(evt: LeafletMouseEvent) {
+
     }
 
-    transportChange(e: any) {
-        this.setState( {transportType: e.target.value});
-    }
 
-    commentChanged(e: any) {
-        this.setState({ comment: e.target.value });
-    }
+    /*
+        savedata() {
+            fetch("/api/routes/route", { 
+                method: "POST",
+                cache: "no-cache",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(this.state)
+            }).then( (res) => { 
+                return res.json();
+            }).then( (res: API.APIResponse<API.RespID>) => {
+                route(`/routes/edit/${res.data}`);
+            });
+        }
+    
+        removePointClicked(idx: number) {
+            this.setState((oldstate) => {
+                return {
+                    routePoints: [...oldstate.routePoints.slice(0, idx), ...oldstate.routePoints.slice(idx + 1)]
+                }
+            });
+        }*/
 
-    //////////////////////////////
-    /*          RENDER          */
-    //////////////////////////////
-    render() { // that enum mapping is probably wrong!
-        if (this.props.createNew)
-            return <div>
-                <h1>Create new</h1>
-                <div>
-                    <TextField onInput={this.detailOnInput} value={this.state.txDetail} helperText="Short description" helperTextPersistent={true} />
-                    <Select onChange={this.transportChange} value={this.state.transportType}>
-                        {Object.keys(API.RouteTransportMethod).map(itm => (<Select.Item value={itm}>{itm}</Select.Item>))}
-                    </Select>
-                    <Button onClick={this.savedata}>Save!</Button> <Button>Load GPX</Button> <br /><br />
-                    <TextField onInput={this.commentChanged} value={this.state.comment} textarea={true} />
-                    <hr />
-                </div>
-                <table><tr><td style="vertical-align: top">
-                    <Map onclick={this.mapClick} points={this.state.routePoints} /></td><td style="vertical-align: top">
-                        Route: <Switch onChange={this.routeSwitchChanged} /> <br />
-                        <RoutePointList points={this.state.routePoints} onRemoveClick={this.removePointClicked} /></td></tr></table>
-            </div>
-        else
-            return <h1>Edit a route</h1>
+
+    r() {
+        const { comment, dayTaken, descript, transportType, pointRouting, routePoints, routeVersion, workMode } = this.state;
+
+        return <div>
+            <h1>Route editor</h1>
+            <fieldset>
+                <TextField onInput={HIValue(this, "descript")} value={descript} helperText="Description for orientation" helperTextPersistent={true} /> <br />
+                <TextField onInput={HIValue(this, "comment")} value={comment} helperText="Comment, that will appear in book" helperTextPersistent={true} /> <br />
+                <TextField type="date" onInput={HIValue(this, "dayTaken")} value={dayTaken} helperText="Date" helperTextPersistent={true} /> <br />
+
+                <Select onChange={HIValue(this, "transportType")} value={transportType}>
+                    {Object.keys(API.RouteTransportMethod).map((itm) => {
+                        let key = (API.RouteTransportMethod as any)[itm];
+                        return <Select.Item value={key}>{itm}</Select.Item>
+                    })}
+                </Select>
+                <Button onClick={this.saveData}>Save!</Button>
+                <Button>Load GPX</Button>
+            </fieldset>
+            <table><tr>
+                <td style="vertical-align: top">
+                    <Map onclick={this.mapClick} points={this.state.routePoints} />
+                </td>
+                <td style="vertical-align: top">
+                    Route: <Switch onChange={HIChecked(this, "pointRouting")} /> <br />
+                    <RoutePointList points={this.state.routePoints}  />
+                </td>
+            </tr></table>
+
+        </div>
     }
 }
