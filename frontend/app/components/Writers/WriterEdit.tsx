@@ -32,7 +32,7 @@ export default class WriterEdit extends BaseComponent<IWriterEditProps, IWriterE
     }
 
     fetchWriter(id: string) {
-        this.download("writer data", API.Urls.Writers.p("actual", id)) 
+        this.download("writer data", API.Urls.Writers.p("actual", id))
             .then((res: API.RespWriter) => {
                 this.setState({ writerName: res.fullName, writerInfo: res.selfDescription });
             });
@@ -49,10 +49,10 @@ export default class WriterEdit extends BaseComponent<IWriterEditProps, IWriterE
         if (this.props.writerId) {
             URL = API.Urls.Writers.p("actual", this.props.writerId);
             method = "PATCH";
-    } else {
-        URL = API.Urls.Writers.p("listall");
-        method = "POST";
-    }
+        } else {
+            URL = API.Urls.Writers.p("listall");
+            method = "POST";
+        }
 
         this.download("upload data", URL, method, body)
             .then((res: API.RespID) => {

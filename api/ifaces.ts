@@ -11,38 +11,68 @@ export enum APIResponseResult {
     Fail = "fail"
 }
 
-export type RespRoute = Routes.LatLng[];
+// Generic
 export type RespID = string;
-export type RespPhotoDirlist = Photos.DirectoryStats[];
 
+// Routes
+export type RespRoute = Routes.SavedRoute;
+export type RespRouteList = Routes.SavedRouteDescription[];
+export type RespRoutePoints = Routes.LatLng[];
+
+// Tags
+export type RespTagList = Tags.PhotoTag[];
+
+// Photos
+export type RespPhotoDirlist = Photos.DirectoryStats[];
 export type RespPhotoListSimple = string[];
 export type RespPhotoListFull = Photos.Photo[];
 export type RespPhotoList = RespPhotoListFull | RespPhotoListSimple; // it can be either just list of ID's or full list with metadatas
-export type RespTagList = Tags.PhotoTag[];
 export type RespPhotoAround = Photos.PhotoAround;
 export type RespPhotoInfo = Photos.Photo;
+
+// Writers
 export type RespWriterList = Writers.Writer[];
 export type RespWriter = Writers.Writer;
+
+// Diary
 export type RespPost =  Diary.Post;
 export type RespPostList = Diary.Post[];
+
+// User and configuration
 export type RespChallenge = string;
 export type RespLoginStatus = User.LoginStatus;
 export type RespConfiguration = Configuration.Configuration;
 export type RespUserConfig = User.UserConfig;
 
+
 export type APIPossibleResponse = 
+    // Generic
     void | 
-    RespRoute | 
-    RespPhotoInfo |
-    RespTagList | 
     RespID | 
+
+    // Routes
+    RespRoute | 
+    RespRouteList |
+    RespRoutePoints |
+
+    // Tags
+    RespTagList | 
+
+    // Photos
+    RespPhotoInfo |
     RespPhotoDirlist | 
     RespPhotoList |
     RespPhotoAround | 
+
+    // Writers
     RespWriterList | 
     RespWriter | 
+
+    // Diary
     RespPost | 
     RespPostList | 
+
+    // Users and configuration
     RespChallenge |
     RespLoginStatus | 
     RespConfiguration |

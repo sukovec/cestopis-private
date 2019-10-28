@@ -29,7 +29,9 @@ export class Photos extends ApiUrl{
 
 export class Routes extends ApiUrl {
     protected readonly _root = "/routes";
-    
+    public readonly between = "/between";
+    public readonly all = "/";
+    public readonly actual = "/:idRoute";
 }
 
 export class Tags extends ApiUrl {

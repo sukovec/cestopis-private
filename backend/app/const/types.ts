@@ -7,6 +7,7 @@ enum TYPES {
 	DiaryService = "diaries",
 	UserService = "authoservi",
 	MiscService = "miscservi",
+	RouteService = "routeservi",
 
 	NeedLogin = "needloginmiddleware",
 	NeedAdmin = "needadminandlocalhost" 

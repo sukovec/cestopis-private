@@ -27,3 +27,14 @@ export interface APIRequestRoute {
     from: RoutePoint;
     to: RoutePoint;
 }
+
+export interface SavedRoute { 
+    _id: string;
+    dayTaken: string;
+    descript: string;
+    comment: string;
+    transportType: RouteTransportMethod;
+    routePoints: RoutePoint[];
+}
+
+export type SavedRouteDescription = Partial<SavedRoute>;
