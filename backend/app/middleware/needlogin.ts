@@ -4,7 +4,7 @@ import { provide } from "inversify-binding-decorators";
 import * as express from "express";
 
 import TYPES from "../const/types";
-import CFG from "../const/config";
+import CFG from "../lib/configuration";
 import * as API from "../api/main";
 
 function isLocalhost(req: express.Request) {

@@ -1,6 +1,6 @@
 import fetchOrig from "node-fetch";
 import * as crypto from "crypto";
-import CFG from "../app/const/config";
+import CFG from "../app/lib/configuration";
 import * as API from "../app/api/main";
 import { TextEncoder } from "util";
 

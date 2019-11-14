@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 import "reflect-metadata";
 
 import * as express from "express";
@@ -11,8 +13,8 @@ import { Container } from "inversify";
 import { InversifyExpressServer, getRouteInfo } from 'inversify-express-utils';
 import { buildProviderModule } from "inversify-binding-decorators";
 
+import CFG from "./lib/configuration";
 
-import CFG from "./const/config";
 import * as API from "./api/main";
 
 // support

@@ -8,8 +8,10 @@ enum TYPES {
 	UserService = "authoservi",
 	MiscService = "miscservi",
 	RouteService = "routeservi",
+	Configuration = "CFG",
 
 	NeedLogin = "needloginmiddleware",
 	NeedAdmin = "needadminandlocalhost" 
 }
+
 export default TYPES;

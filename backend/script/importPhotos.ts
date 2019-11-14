@@ -10,7 +10,7 @@ const exifproc = new exif.ExiftoolProcess();
 
 import "reflect-metadata";
 
-import CFG from "../app/const/config";
+import CFG from "../app/lib/configuration";
 import * as API from "../app/api/main";
 import db from "../app/services/db";
 

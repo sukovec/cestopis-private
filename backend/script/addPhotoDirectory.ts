@@ -6,7 +6,7 @@ import { execFile } from "child_process";
 const exif = require("node-exiftool");
 const exifproc = new exif.ExiftoolProcess();
 
-import CFG from "../app/const/config";
+import CFG from "../app/lib/configuration";
 import * as API from "../app/api/main";
 
 import { login, fetch } from "./login";

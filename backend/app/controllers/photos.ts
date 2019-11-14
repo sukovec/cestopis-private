@@ -9,12 +9,14 @@ import {
     httpDelete,
     httpPatch,
 } from 'inversify-express-utils';
+
 import { inject } from "inversify";
 import * as express from "express";
 import * as path from "path";
 
-import CFG from "../const/config";
+import CFG from "../lib/configuration";
 import TYPES from "../const/types";
+
 import PhotoService from "../services/srvphotos";
 
 import * as API from "../api/main";

@@ -18,6 +18,7 @@
     "@types/prettyjson": "0.0.29",
     "@types/uuid": "^3.4.5",
     "csv-parse": "^4.6.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "fetch-cookie": "^0.7.3",
