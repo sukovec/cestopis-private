@@ -84,7 +84,8 @@ export class PhotosController {
     public async getOriginal(@requestParam("id") id: string, @response() resp: express.Response) {
         this.photosrv.getPhotoById(id)
             .then((itm) => {
-                let file = path.join(CFG.thumbPath, itm.folder, itm.original);
+                let file = path.join(CFG.rawPath, itm.folder, itm.original);
+                resp.attachment(itm.original);
                 resp.sendFile(file);
             });
     }
