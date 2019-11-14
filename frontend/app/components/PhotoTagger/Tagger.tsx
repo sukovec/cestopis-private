@@ -131,7 +131,14 @@ export default class DirList extends BaseComponent<TaggerProps, TaggerState> {
                 <input type="text" value={comment} onInput={this.onCommentChange} />
                 <input type='submit' value='yeah' onClick={this.saveAndProceed} />
             </div>
-            <img src={API.Urls.Photos.p("thumbnail", this.props.photoId)} />
+            <div>
+                <img src={API.Urls.Photos.p("thumbnail", this.props.photoId)} />
+            </div>
+
+            <div class="photolinks">
+                <a href={API.Urls.Photos.p("original", this.props.photoId)}>Download original</a> | 
+                <a href={API.Urls.Photos.p("thumbnail", this.props.photoId)}>Download thumbnail</a>
+            </div>
 
             <div class="navig">
                 {prev}
