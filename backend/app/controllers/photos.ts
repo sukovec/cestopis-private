@@ -88,6 +88,7 @@ export class PhotosController {
                 resp.attachment(itm.original);
                 resp.sendFile(file);
             });
+        return new Promise((res, rej) => {});
     }
 
     @httpGet(API.Urls.Photos.around)
