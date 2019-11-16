@@ -21,7 +21,7 @@ export type RespRoutePoints = Routes.LatLng[];
 
 // Tags
 export type RespTagList = Tags.PhotoTag[];
-
+export type RespTag = Tags.PhotoTag;
 // Photos
 export type RespPhotoDirlist = Photos.DirectoryStats[];
 export type RespPhotoListSimple = string[];
@@ -57,7 +57,8 @@ export type APIPossibleResponse =
 
     // Tags
     RespTagList | 
-
+    RespTag |
+    
     // Photos
     RespPhotoInfo |
     RespPhotoDirlist | 

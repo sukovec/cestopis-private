@@ -22,4 +22,45 @@ export default class TagService {
             })
         })
     }
+
+    getTagById(idTag: string): Promise<API.PhotoTag> {
+        return new Promise( (res, rej) => {
+            this.database.phtags.findOne({_id: idTag}, (err: any, doc: API.PhotoTag) => {
+                if (err) return rej(err);
+
+                res(doc);
+            })
+        });
+    }
+
+    getTagByName(name: string): Promise<API.PhotoTag> {
+        return new Promise( (res, rej) => {
+            this.database.phtags.findOne({tagName: name}, (err: any, doc: API.PhotoTag) => {
+                if (err) return rej(err);
+
+                res(doc);
+            })
+        });
+    }
+
+    addNewTag(tag: API.PhotoTag): Promise<string> {
+        return new Promise( (res, rej) => {
+            this.database.phtags.insert(tag, (err, doc) => {
+                if (err) return rej (err);
+
+                res(doc._id);
+            });
+        }); 
+    }
+
+    updateTag(tagId: string, tag: API.PhotoTag): Promise<void> {
+        return new Promise( (res, rej) => {
+            this.database.phtags.update({_id: tagId}, tag, {}, (err, num) => {
+                if (err) return rej (err);
+                if (num != 1) throw new Error("No document was updated");
+
+                res();
+            });
+        }); 
+    }
 }

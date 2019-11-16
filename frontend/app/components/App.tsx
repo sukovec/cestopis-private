@@ -22,6 +22,7 @@ import PhotoTagger from "./PhotoTagger";
 import Diary from "./Diary";
 import Writers from "./Writers";
 import Configuration from "./Configuration";
+import TagEdit from "./TagEdit";
 
 interface IAppProps extends X.IDefProps {
 
@@ -97,6 +98,7 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 			<Button outlined onclick={() => route("/diary")}>Diary</Button>
 			<Button outlined onclick={() => route("/routes")}>Routes</Button>
 			<Button outlined onclick={() => route("/photos")}>Photos</Button>
+			<Button outlined onclick={() => route("/tags")}>Tags</Button>
 			<Button outlined onclick={() => route("/config")}>Configuration</Button>
 			
 			<Button secondary onclick={this.logout}>Log out</Button>
@@ -109,6 +111,7 @@ export default class App extends BaseComponent<IAppProps, IAppState> {
 				<Writers path="/writers/:writerId?" />
 				<Configuration path="/config" />
 				<Greeting path="/" username={this.state.username} />
+				<TagEdit path="/tags/:tagId?" />
 			</Router>
 		</div>;
 	}

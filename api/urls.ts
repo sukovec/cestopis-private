@@ -38,6 +38,7 @@ export class Tags extends ApiUrl {
     protected readonly _root = "/tags";
 
     public readonly taglist = "/";
+    public readonly specific = "/:idTag";
 }
 
 export class Users extends ApiUrl {
